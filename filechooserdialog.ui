@@ -68,10 +68,10 @@ pod uwagę przy tagowaniu</attribute>
 		   
     </submenu>
     <submenu>
-      <attribute name="label">Help</attribute>
+      <attribute name="label">Pomoc</attribute>
       <section>
         <item>
-          <attribute name="label">About</attribute>
+          <attribute name="label">O programie</attribute>
           <attribute name="action">win.about</attribute>
         </item>
       </section>
