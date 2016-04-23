@@ -2,6 +2,8 @@ from fingerprints import generateFingerprints
 from database import connect
 import operator
 
+from config import *
+
 def fingerprintRecognize(path):
     """
         Recognizes song using fingerprinting.

@@ -3,7 +3,7 @@
 """
 
 from pg import DB
-import dbConfig
+from dbConfig import *
 
 def connect():
     """

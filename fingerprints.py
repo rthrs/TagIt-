@@ -14,7 +14,7 @@ from scipy.ndimage.morphology import (generate_binary_structure,
 
 import os
 import md5
-import config
+from config import *
 
 def generateSpectogram(song):
     """
