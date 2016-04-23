@@ -3,6 +3,7 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GObject
+from gi.repository import GdkPixbuf
 import sys
 
 
@@ -82,10 +83,7 @@ class MyWindow(Gtk.ApplicationWindow):
         +'automatyczne tagowanie i nazywanie plików z muzyką, zapewniająca '
         +'przejrzystość w folderach. Dzięki niej można łatwo odnaleźć konkretny'
         +' utwór, czy też wszystkie utwory danego wykonawcy.')        
-        #cos sie segfaulci :c
-        #aboutdialog.set_logo('/home/monika/Pobrane/logo.jpg')
-        #aboutdialog.set_website("http://developer.gnome.org")
-        #aboutdialog.set_website_label("GNOME Developer Website")
+        aboutdialog.set_logo(GdkPixbuf.Pixbuf.new_from_file('logo.jpg'))
 
         # to close the aboutdialog when "close" is clicked we connect the
         # "response" signal to on_close
@@ -193,6 +191,7 @@ class MyWindow(Gtk.ApplicationWindow):
             # set the content as the text into the buffer
             #self.buffer.set_text(content, len(content))
             print("opened: " + dir_open_dialog.get_filename())
+            
         # if response is "CANCEL" (the button "Cancel" has been clicked)
         elif response_id == Gtk.ResponseType.CANCEL:
             print("cancelled: FileChooserAction.OPEN")
