@@ -13,6 +13,7 @@ class MyWindow(Gtk.ApplicationWindow):
         Gtk.Window.__init__(
             self, title="TagIt!", application=app)
         self.set_default_size(500, 400)
+        self.set_icon(GdkPixbuf.Pixbuf.new_from_file('static/icon.jpg'))
 
         # the actions for the window menu, connected to the callback functions
         new_action = Gio.SimpleAction.new("new", None)
@@ -83,7 +84,7 @@ class MyWindow(Gtk.ApplicationWindow):
         +'automatyczne tagowanie i nazywanie plików z muzyką, zapewniająca '
         +'przejrzystość w folderach. Dzięki niej można łatwo odnaleźć konkretny'
         +' utwór, czy też wszystkie utwory danego wykonawcy.')        
-        aboutdialog.set_logo(GdkPixbuf.Pixbuf.new_from_file('logo.jpg'))
+        aboutdialog.set_logo(GdkPixbuf.Pixbuf.new_from_file('static/logo.jpg'))
 
         # to close the aboutdialog when "close" is clicked we connect the
         # "response" signal to on_close
