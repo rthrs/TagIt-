@@ -4,15 +4,18 @@ import operator
 
 def fingerprintRecognize(path):
     """
-        Recognizes song based on fingerprints.
-        Returns -1 if song was not recognized or id of song in database.
+        Recognizes song using fingerprinting.
+        Args:
+            path: path to the song.
+        Returns:
+            id of a song in databse if song was found.
+            -1 if song was not recognized or path does not contain a valid audio file.
     """
     
-    # fingerprint just 1 sec. of song
-    # TODO: rand those values
+    # Fingerprint first 15 seconds of a song.
+    # TODO: Maybe this value should be randed or added to config.
     start = 0
     stop = 15000
-    threshold = 30
     fp = generateFingerprints(path, startTime=start, endTime=stop)
     
     if fp == []:
@@ -31,10 +34,11 @@ def fingerprintRecognize(path):
     
     # print(hits)
     
+    
     if hits != {}:
         res = max(hits.iteritems(), key=operator.itemgetter(1))[0]
     
-    if hits != {} and hits[res] >= threshold:
+    if hits != {} and hits[res] >= THRESHOLD:
         # print(res)
         return res[0]
     else:
@@ -44,7 +48,11 @@ def fingerprintRecognize(path):
 def recognize(path):    
     """
         Recognizes song from path.
-        Returns -1 if song was not recognized or id of song in database.
+        Args:
+            path: path to the song.
+        Returns:
+            id of a song in databse if song was found.
+            -1 if song was not recognized or path does not contain a valid audio file.
     """
     # TODO: other recognition methods
     return fingerprintRecognize(path)

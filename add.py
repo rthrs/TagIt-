@@ -9,8 +9,15 @@ import eyed3
 def addSong(path, tags={}):
     """
         Adds song to a database.
-        Returns -1 if path does not contain a correct song, -2 if tags are not correct and 1 if add was successful.
         Works only for mp3 files for now.
+        Args:
+            path: Path to the song
+            tags (Optional): A dictionary of tags. If empty tags of file will by used. Title and artist are required.
+        Returns:
+            -1 if path does not contain a valid song.
+            -2 if either artist or title is missing from tags.
+            1 if successful
+               
     """
     # TODO: change method of reading tags (eyed3 supports only mp3 files and doesn't get year).    
     
@@ -24,9 +31,9 @@ def addSong(path, tags={}):
             return -2
         tags = {
             'artist' : af.tag.artist,
-            'title' : af.tag.title,
-            'album' : af.tag.album,
-            'track' : af.tag.track_num[0]
+            'title'  : af.tag.title,
+            'album'  : af.tag.album,
+            'track'  : af.tag.track_num[0]
         }
     elif not ('artist' in tags and 'title' in tags): # artist and title are required tags
         # print(tags)

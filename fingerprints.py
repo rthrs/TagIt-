@@ -1,5 +1,5 @@
 """
-    Functions for generating fingerprints of a single song.
+    Functions for generating fingerprints.
     Some code based on https://github.com/worldveil/dejavu/blob/master/dejavu/fingerprint.py
 """
 
@@ -13,17 +13,17 @@ from scipy.ndimage.morphology import (generate_binary_structure,
                                       iterate_structure, binary_erosion)
 
 import os
-
 import md5
+import config
 
 def generateSpectogram(song):
     """
         Generates spectogram for a song.
+        Args:
+            song: AugioSegement of song of which spectogram should be created.
+        Returns:
+            Spectrum from matplotlib.specgram with scale changed to logarithmic.
     """
-
-    DATA_POINTS = 4096
-    NUM_OVER = 2048
-    FREQ = 10000
 
     song = song.set_channels(1) # sample only one channel
     # song = song.set_frame_rate(FREQ)
@@ -43,11 +43,13 @@ def generateSpectogram(song):
 
 def get2DPeaks(arr2D):
     """
-        For a given spectogram generates list of pairs (time, frequency) of peaks.
+        Generates peaks of a spectogram.
+        Args:
+            arr2D: spectogram.
+        Returns:
+            List of pairs (time, frequency) of peaks.
     """
-    AMP_MIN = 10
-    PEAK_NEIGHBORHOOD_SIZE = 20
-    
+
     struct = generate_binary_structure(2, 1)
     neighborhood = iterate_structure(struct, PEAK_NEIGHBORHOOD_SIZE)
 
@@ -77,10 +79,12 @@ def get2DPeaks(arr2D):
     
 def getHashes(peaks):
     """
-        Calculates pairs (hash, time) for a given list of peaks.
+        Generates hashes of peaks.
+        Args:
+            peaks: list of pairs (time, frequenct) of peaks.
+        Returns:
+            List of pairs (hash, time).
     """
-    NUM_OF_PEAKS = 15 # number of neighborhood peaks to consider
-    MAX_TIME_DIFF = 150 # maximum time difference
     
     res = []
     
@@ -99,8 +103,14 @@ def getHashes(peaks):
 def generateFingerprints(path, startTime=0, endTime=60000):
     """
         Calculates array of pairs (hash, time) for a song in a given path.
-        If path does not contain a valid music file returns an empty list.
         By default samples first minute of a song.
+        Args:
+            path: path to song.
+            startTime (Optional): time from which fingerprinting should start.
+            endTime (Optional): time at which fingerprinting should end.
+        Returns:
+            List of pairs (hash, time).
+            Empty list if path does not contain a valid music file.
     """
     
     filename, fileExtension = os.path.splitext(path)

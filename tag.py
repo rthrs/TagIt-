@@ -4,6 +4,15 @@ import eyed3
 import os
 
 def tagFolder(path):
+    """
+        Tags all file in a given folder.
+        Args:
+            path: path to the folder.
+        Returns:
+            List of files which couldn't be tagged.
+    """
+    # TODO: Deal with subfolders (currently they are treated as incorrect file).
+    
     res = []
     if path[-1:] != "/":
         path = path+"/"
@@ -13,8 +22,12 @@ def tagFolder(path):
 
 def tagFile(path):
     """
-        Tags a single file.
-        Retruns -1 if tagging failed, 0 otherwise.
+        Tags single file and renames it in format Artist - Song name.
+        Args:
+            path: path to the file.
+        Retruns:
+            0 if tagging was successful.
+            -1 if tagging failed.
     """
     # TODO: options for naming file
     
@@ -40,6 +53,11 @@ def tagFile(path):
 def tag(path):
     """
         Tags folder or a single music file.
-        Returns list of files for which tagging failed.
+        Args:
+            path: path to file or folder.
+        Returns:
+            List of files for which tagging failed.
     """
+    # TODO: implement it using 
+    pass
     
