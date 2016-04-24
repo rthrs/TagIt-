@@ -137,7 +137,7 @@ class MyWindow(Gtk.ApplicationWindow):
         if response_id == Gtk.ResponseType.ACCEPT:
             # self.file is the file that we get from the FileChooserDialog
             self.file = open_dialog.get_file()
-            tag.tagFile(dir_open_dialog.get_filename())
+            tag.tagFile(open_dialog.get_filename())
             print("opened: " + open_dialog.get_filename())
         # if response is "CANCEL" (the button "Cancel" has been clicked)
         elif response_id == Gtk.ResponseType.CANCEL:
