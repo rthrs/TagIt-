@@ -4,7 +4,7 @@ from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GObject
 import sys
-import tag
+
 from gi.repository import GdkPixbuf
 pixbuf = GdkPixbuf.Pixbuf.new_from_file('static/logo.png')
 
@@ -87,7 +87,7 @@ class MyWindow(Gtk.ApplicationWindow):
         +'przejrzystość w folderach. Dzięki niej można łatwo odnaleźć konkretny'
         +' utwór, czy też wszystkie utwory danego wykonawcy.')        
         aboutdialog.set_logo(pixbuf)
-        aboutdialog.set_icon_from_file('icon_cpy.png')
+        aboutdialog.set_icon_from_file('static/icon_cpy.png')
         #aboutdialog.set_website("http://developer.gnome.org")
         #aboutdialog.set_website_label("GNOME Developer Website")
 
