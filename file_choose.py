@@ -6,7 +6,7 @@ from gi.repository import GObject
 import sys
 import tag
 from gi.repository import GdkPixbuf
-pixbuf = GdkPixbuf.Pixbuf.new_from_file('logo.png')
+pixbuf = GdkPixbuf.Pixbuf.new_from_file('static/logo.png')
 
 
 class MyWindow(Gtk.ApplicationWindow):
@@ -15,7 +15,7 @@ class MyWindow(Gtk.ApplicationWindow):
         Gtk.Window.__init__(
             self, title="TagIt!", application=app)
         self.set_default_size(500, 400)
-        self.set_icon_from_file('icon_cpy.png')
+        self.set_icon_from_file('static/icon_cpy.png')
 
         # the actions for the window menu, connected to the callback functions
         new_action = Gio.SimpleAction.new("new", None)
