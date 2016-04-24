@@ -4,7 +4,7 @@ from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GObject
 import sys
-
+import tag
 from gi.repository import GdkPixbuf
 pixbuf = GdkPixbuf.Pixbuf.new_from_file('static/logo.png')
 
