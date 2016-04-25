@@ -128,8 +128,18 @@ class MyWindow(Gtk.ApplicationWindow):
         open_dialog = dialog
         # if response is "ACCEPT" (the button "Open" has been clicked)
         if response_id == Gtk.ResponseType.ACCEPT:
-            tag.tagFile(open_dialog.get_filename())
             print("opened: " + open_dialog.get_filename())
+            if tag.tagFile(open_dialog.get_filename()) == 0:
+                me = edit.info("Udało się", "Plik został otagowany.")
+                me.run()
+                me.destroy()
+            else:
+                me = edit.ups_quest("Coś poszło nie tak.", "Czy chcesz poprawić tagi ręcznie?")
+                response = me.run()
+                me.destroy()
+                if response == Gtk.ResponseType.OK:
+                  edit.TagEditor(open_dialog.get_filename()).tagEditor()
+                  
         # if response is "CANCEL" (the button "Cancel" has been clicked)
         elif response_id == Gtk.ResponseType.CANCEL:
             print("cancelled: FileChooserAction.OPEN")

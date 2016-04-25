@@ -20,7 +20,11 @@ def iNone(obj):
     return obj
 
 class TagEditor:
-
+    """
+      Every instance of this class creates window that enables
+      user to manually change tags for given file. Requires
+      filepath passed to constructor.
+    """
     builder = Gtk.Builder()
     def __init__(self, filename):
       self.filename = filename
@@ -54,6 +58,9 @@ class TagEditor:
       self.builder.get_object('tagEditor').destroy()
 
     def tagEditor(self):
+      """
+        Shows editor's window.
+      """
       try:
         fileh = eyed3.load(self.filename)
       except:
@@ -79,4 +86,23 @@ class TagEditor:
       self.builder.get_object('cancel').connect('clicked', self.cancel_callback, None)
       self.builder.get_object('save').connect('clicked', self.save_callback, fileh)
       self.builder.get_object('tagEditor').show_all()
+
+
+
+# Messeges
+
+def info(title, message):
+  me = Gtk.MessageDialog(title = title,
+                 message_type=Gtk.MessageType.INFO, buttons = Gtk.ButtonsType.OK)
+  me.format_secondary_text(message)
+  return me
+
+def ups_quest(title, message):
+  me = Gtk.MessageDialog(title = title,
+                 message_type=Gtk.MessageType.QUESTION, buttons = 
+                 ["Tak", Gtk.ResponseType.OK,  
+                  "Zignoruj", Gtk.ResponseType.CANCEL])
+  me.format_secondary_text(message)
+  return me
+
 
