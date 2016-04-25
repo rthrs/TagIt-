@@ -1,6 +1,7 @@
 from recognize import recognize
 from database import getTags
 import eyed3
+import settings
 import os
 
 def tagFolder(path):
