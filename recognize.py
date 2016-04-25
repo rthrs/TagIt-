@@ -17,7 +17,7 @@ def fingerprintRecognize(path):
     # Fingerprint first 7 seconds of a song.
     # TODO: Maybe this value should be randed or added to config.
     start = 0
-    stop = 7000
+    stop = 10000
     fp = generateFingerprints(path, startTime=start, endTime=stop)
     
     if fp == []:

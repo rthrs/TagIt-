@@ -16,4 +16,4 @@ NUM_OF_PEAKS = 15 # number of neighborhood peaks to consider
 MAX_TIME_DIFF = 150 # maximum time difference
 
 # RECOGNITION
-THRESHOLD = 30
+THRESHOLD = 15
