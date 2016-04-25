@@ -1,7 +1,6 @@
 from recognize import recognize
 from database import getTags
 import eyed3
-import settings
 import os
 
 def tagFolder(path):
@@ -11,17 +10,14 @@ def tagFolder(path):
             path: path to the folder.
         Returns:
             List of files which couldn't be tagged.
-    """
-    # TODO: Deal with subfolders (currently they are treated as incorrect file).
-    
+    """ 
     res = []
-    if path[-1:] != "/":
-        path = path+"/"
-        
-    for song in os.listdir(path):
-        if tagFile(path+song) == -1:
-            res.append(song)
-            
+
+    for root, dirs, files in os.walk(path):
+        for filename in files:
+            path = root+"/"+filename
+            if tagFile (path)== -1:
+                res.append(path)        
     return res
 
 def tagFile(path):
@@ -52,7 +48,7 @@ def tagFile(path):
     af.tag.save()
     
     filename, fileExtension = os.path.splitext(path)
-    settings.rename(path, af.tag.artist, af.tag.title, af.tag.album, fileExtension)
+    os.rename(path, os.path.dirname(path)+"/"+tags['artist']+" - "+tags['title']+fileExtension)
 
 def tag(path):
     """
