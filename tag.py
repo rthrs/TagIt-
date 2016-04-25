@@ -10,17 +10,14 @@ def tagFolder(path):
             path: path to the folder.
         Returns:
             List of files which couldn't be tagged.
-    """
-    # TODO: Deal with other file extensions than mp3.
-    
+    """ 
     res = []
 
     for root, dirs, files in os.walk(path):
         for filename in files:
-            if ".mp3" in filename:
-                path = root+"/"+filename
-                if tagFile (path)== -1:
-                    res.append(path)        
+            path = root+"/"+filename
+            if tagFile (path)== -1:
+                res.append(path)        
     return res
 
 def tagFile(path):
