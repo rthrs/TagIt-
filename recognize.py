@@ -14,10 +14,10 @@ def fingerprintRecognize(path):
             -1 if song was not recognized or path does not contain a valid audio file.
     """
     
-    # Fingerprint first 15 seconds of a song.
+    # Fingerprint first 7 seconds of a song.
     # TODO: Maybe this value should be randed or added to config.
     start = 0
-    stop = 15000
+    stop = 10000
     fp = generateFingerprints(path, startTime=start, endTime=stop)
     
     if fp == []:

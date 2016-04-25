@@ -18,7 +18,10 @@ def tagFolder(path):
         path = path+"/"
         
     for song in os.listdir(path):
-        tagFile(path+song)
+        if tagFile(path+song) == -1:
+            res.append(song)
+            
+    return res
 
 def tagFile(path):
     """
