@@ -5,6 +5,7 @@ from gi.repository import Gio
 from gi.repository import GObject
 import sys
 import tag
+import edit
 from gi.repository import GdkPixbuf
 pixbuf = GdkPixbuf.Pixbuf.new_from_file('logo.png')
 
@@ -42,6 +43,10 @@ class MyWindow(Gtk.ApplicationWindow):
         settings_action.connect("activate", self.settings_callback)
         self.add_action(settings_action)
         
+        settings_action = Gio.SimpleAction.new("tagEdit", None)
+        settings_action.connect("activate", self.tagEdit_callback)
+        self.add_action(settings_action)
+
         # action with a state created
         about_action = Gio.SimpleAction.new("about", None)
         # action connected to the callback function
@@ -66,7 +71,25 @@ class MyWindow(Gtk.ApplicationWindow):
 
         # add the scrolled window to the window
         self.add(self.scrolled_window)
-        
+
+    # callback function for tagEditor
+    def tagEdit_callback(self, action, parameter):
+      dialog = Gtk.FileChooserDialog(title="Wybierz plik",
+               action=Gtk.FileChooserAction.OPEN,
+               buttons=["Otwórz", Gtk.ResponseType.OK, 
+              "Powrót", Gtk.ResponseType.CANCEL])
+
+      filter = Gtk.FileFilter()
+      filter.set_name("Pliki mp3")
+      filter.add_pattern("*.mp3")
+      dialog.add_filter(filter)
+
+      response = dialog.run()
+      filename = dialog.get_filename()
+      dialog.destroy() 
+      if response == Gtk.ResponseType.OK:
+        edit.TagEditor(filename).tagEditor()
+
     # callback function for about (see the AboutDialog example)
     def about_callback(self, action, parameter):
         # a  Gtk.AboutDialog
