@@ -1,8 +1,8 @@
 #!/usr/bin/python
 
 """
-Clear tags from given files and rename to random string.
-Using: python clear_tags.py [paths to mp3 file...]
+    Clear tags from given files and rename to random string.
+    Using: python clear_tags.py [paths to mp3 file...]
        eg. python clear_tags.py song1.mp3 song2.mp3
 """
 
@@ -25,5 +25,3 @@ for path in mp3_list:
         print("Clearing tags from path: " + path + " New file name: " + rand_name)
     except:
         print("ERROR: Probably wrong path: " + path)
-
-

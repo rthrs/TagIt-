@@ -1,3 +1,7 @@
+"""
+    Functions for music files recognition.
+"""
+
 from fingerprints import generateFingerprints
 from database import connect
 import operator

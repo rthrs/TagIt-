@@ -1,3 +1,7 @@
+"""
+    TagIt! GUI.
+"""
+
 #-*- coding: utf-8 -*-
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -10,12 +14,16 @@ import pylab
 import settings
 import collection
 from gi.repository import GdkPixbuf
+
 pixbuf = GdkPixbuf.Pixbuf.new_from_file('logo.png')
 
 
-class MyWindow(Gtk.ApplicationWindow):
+class MainWindow(Gtk.ApplicationWindow):
 
     def __init__(self, app):
+        """
+            MainWindow constructor.
+        """
         Gtk.Window.__init__(
             self, title="TagIt!", application=app)
         self.set_default_size(500, 400)
@@ -59,8 +67,11 @@ class MyWindow(Gtk.ApplicationWindow):
         img.set_from_file("bg_light.png") 
         self.add(img)
 
-    # callback for creatinc collection
+    #
     def col_open_callback(self, action, parameter):
+        """
+            Callback for creating collection.
+        """
         # create a filechooserdialog to open:
         # the arguments are: title of the window, parent_window, action,
         # (buttons, response)
@@ -78,8 +89,10 @@ class MyWindow(Gtk.ApplicationWindow):
         # show the dialog
         col_open_dialog.show()
 
-    # callback function for the dialog col_open_dialog
     def col_open_response_cb(self, dialog, response_id):
+        """
+            Callback function for the dialog col_open_dialog.
+        """
         col_open_dialog = dialog
         # if response is "ACCEPT" (the button "Open" has been clicked)
         if response_id == Gtk.ResponseType.ACCEPT:
@@ -92,26 +105,31 @@ class MyWindow(Gtk.ApplicationWindow):
         # destroy the FileChooserDialog
         dialog.destroy()
 
-    # callback function for tagEditor
     def tagEdit_callback(self, action, parameter):
-      dialog = Gtk.FileChooserDialog(title="Wybierz plik",
+        """
+            Callback function for tagEditor.
+        """
+
+        dialog = Gtk.FileChooserDialog(title="Wybierz plik",
                action=Gtk.FileChooserAction.OPEN,
-               buttons=["Otwórz", Gtk.ResponseType.OK, 
+               buttons=["Otwórz", Gtk.ResponseType.OK,
               "Powrót", Gtk.ResponseType.CANCEL])
 
-      filter = Gtk.FileFilter()
-      filter.set_name("Pliki mp3")
-      filter.add_pattern("*.mp3")
-      dialog.add_filter(filter)
+        filter = Gtk.FileFilter()
+        filter.set_name("Pliki mp3")
+        filter.add_pattern("*.mp3")
+        dialog.add_filter(filter)
 
-      response = dialog.run()
-      filename = dialog.get_filename()
-      dialog.destroy() 
-      if response == Gtk.ResponseType.OK:
-        edit.TagEditor(filename).tagEditor()
-                
-    # callback function for about (see the AboutDialog example)
+        response = dialog.run()
+        filename = dialog.get_filename()
+        dialog.destroy()
+        if response == Gtk.ResponseType.OK:
+            edit.TagEditor(filename).tagEditor()
+
     def about_callback(self, action, parameter):
+        """
+            Callback function for about.
+        """
         # a  Gtk.AboutDialog
         aboutdialog = Gtk.AboutDialog()
 
@@ -138,16 +156,23 @@ class MyWindow(Gtk.ApplicationWindow):
         # show the aboutdialog
         aboutdialog.show()
 
-    # a callback function to destroy the aboutdialog
     def on_close(self, action, parameter):
+        """
+            A callback function to destroy the about dialog.
+        """
         action.destroy()
 
-    # callback for settings
     def settings_callback(self, action, parameter):
+        """
+            Callback for settings.
+        """
         print("Settings opened")
 
     # callback for open
     def open_callback(self, action, parameter):
+        """
+            Callback for open.
+        """
         # create a filechooserdialog to open:
         # the arguments are: title of the window, parent_window, action,
         # (buttons, response)
@@ -165,8 +190,10 @@ class MyWindow(Gtk.ApplicationWindow):
         # show the dialog
         open_dialog.show()
 
-    # callback function for the dialog open_dialog
     def open_response_cb(self, dialog, response_id):
+        """
+            Callback function for the dialog open_dialog.
+        """
         open_dialog = dialog
         # if response is "ACCEPT" (the button "Open" has been clicked)
         if response_id == Gtk.ResponseType.ACCEPT:
@@ -187,9 +214,11 @@ class MyWindow(Gtk.ApplicationWindow):
             print("cancelled: FileChooserAction.OPEN")
         # destroy the FileChooserDialog
         dialog.destroy()
-        
-    # callback for open a directory
+
     def dir_open_callback(self, action, parameter):
+        """
+            Callback for open a directory.
+        """
         # create a filechooserdialog to open:
         # the arguments are: title of the window, parent_window, action,
         # (buttons, response)
@@ -207,8 +236,10 @@ class MyWindow(Gtk.ApplicationWindow):
         # show the dialog
         dir_open_dialog.show()
 
-    # callback function for the dialog dir_open_dialog
     def dir_open_response_cb(self, dialog, response_id):
+        """
+            Callback function for the dialog dir_open_dialog.
+        """
         dir_open_dialog = dialog
         # if response is "ACCEPT" (the button "Open" has been clicked)
         if response_id == Gtk.ResponseType.ACCEPT:
@@ -221,13 +252,17 @@ class MyWindow(Gtk.ApplicationWindow):
         # destroy the FileChooserDialog
         dialog.destroy()
 
-class MyApplication(Gtk.Application):
+
+class Application(Gtk.Application):
 
     def __init__(self):
+        """
+            Application constructor.
+        """
         Gtk.Application.__init__(self)
 
     def do_activate(self):
-        win = MyWindow(self)
+        win = MainWindow(self)
         win.show_all()
 
     def do_startup(self):
@@ -248,10 +283,12 @@ class MyApplication(Gtk.Application):
         menu = builder.get_object("menubar")
         self.set_menubar(builder.get_object("menubar"))
 
-    # callback function for quit
     def quit_callback(self, action, parameter):
+        """
+            Callback function for quit.
+        """
         self.quit()
 
-app = MyApplication()
+app = Application()
 exit_status = app.run(sys.argv)
 sys.exit(exit_status)

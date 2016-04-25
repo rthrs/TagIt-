@@ -4,6 +4,7 @@ import eyed3
 import settings
 import os
 
+
 def tagFolder(path):
     """
         Tags all file in a given folder.
@@ -20,6 +21,7 @@ def tagFolder(path):
             if tagFile (path2)== -1:
                 res.append(path2[len(path)+1:])
     return res
+
 
 def tagFile(path):
     """
@@ -52,6 +54,7 @@ def tagFile(path):
     settings.rename(path, af.tag.artist, af.tag.title, af.tag.album, fileExtension)
     return 0
 
+
 def tag(path):
     """
         Tags folder or a single music file.
@@ -62,4 +65,4 @@ def tag(path):
     """
     # TODO: implement it using 
     pass
-    
+

@@ -1,0 +1,34 @@
+\hypertarget{namespaceadd}{\section{add Namespace Reference}
+\label{namespaceadd}\index{add@{add}}
+}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespaceadd_a2fed564d8a86dbd10d42bd4778cb296e}{add\-Song}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyVerb}    Function for adding song to database.
+\end{DoxyVerb}
+ 
+
+\subsection{Function Documentation}
+\hypertarget{namespaceadd_a2fed564d8a86dbd10d42bd4778cb296e}{\index{add@{add}!add\-Song@{add\-Song}}
+\index{add\-Song@{add\-Song}!add@{add}}
+\subsubsection[{add\-Song}]{\setlength{\rightskip}{0pt plus 5cm}def add.\-add\-Song (
+\begin{DoxyParamCaption}
+\item[{}]{path, }
+\item[{}]{tags = {\ttfamily \{\}}}
+\end{DoxyParamCaption}
+)}}\label{namespaceadd_a2fed564d8a86dbd10d42bd4778cb296e}
+\begin{DoxyVerb}    Adds song to a database.
+    Works only for mp3 files for now.
+    Args:
+        path: Path to the song
+        tags (Optional): A dictionary of tags. If empty tags of file will by used. Title and artist are required.
+    Returns:
+        -1 if path does not contain a valid song.
+        -2 if either artist or title is missing from tags.
+        1 if successful\end{DoxyVerb}
+ 

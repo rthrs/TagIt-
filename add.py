@@ -6,6 +6,7 @@ from fingerprints import generateFingerprints
 from database import connect
 import eyed3
 
+
 def addSong(path, tags={}):
     """
         Adds song to a database.
