@@ -40,10 +40,10 @@ def tagFile(path):
         return -1
     tags = getTags(song_id)
     af = eyed3.load(path)
-    af.tag.artist = unicode(tags['artist'])
-    af.tag.title = unicode(tags['title'])
+    af.tag.artist = tags['artist'].decode('utf-8')
+    af.tag.title = tags['title'].decode('utf-8')
     if tags['album'] != None:
-        af.tag.album = unicode(tags['album'])
+        af.tag.album = tags['album'].decode('utf-8')
     else:
         af.tag.album = u'';
     if tags['track'] != None:

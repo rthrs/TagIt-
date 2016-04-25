@@ -5,6 +5,10 @@
 import os
 import tag
 import eyed3
+import sys
+
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 def moveUp(src, dst):
     """
