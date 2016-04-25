@@ -11,7 +11,7 @@
 		  </item>
 		  <item>
 			<attribute name="label">Ręczne tagowanie pliku</attribute>
-			<attribute name="action">win.open</attribute>
+			<attribute name="action">win.tagEdit</attribute>
 		  </item>
 		 </section>
 		 <section>
