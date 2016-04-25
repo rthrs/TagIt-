@@ -7,6 +7,7 @@ import sys
 import tag
 import edit
 import pylab
+import collection
 from gi.repository import GdkPixbuf
 pixbuf = GdkPixbuf.Pixbuf.new_from_file('logo.png')
 
@@ -29,12 +30,16 @@ class MyWindow(Gtk.ApplicationWindow):
         dir_open_action.connect("activate", self.dir_open_callback)
         self.add_action(dir_open_action)
         
-        settings_action = Gio.SimpleAction.new("settings", None)
-        settings_action.connect("activate", self.settings_callback)
-        self.add_action(settings_action)
+        col_open_action = Gio.SimpleAction.new("col_open", None)
+        col_open_action.connect("activate", self.col_open_callback)
+        self.add_action(col_open_action)
         
         settings_action = Gio.SimpleAction.new("tagEdit", None)
         settings_action.connect("activate", self.tagEdit_callback)
+        self.add_action(settings_action)
+                
+        settings_action = Gio.SimpleAction.new("settings", None)
+        settings_action.connect("activate", self.settings_callback)
         self.add_action(settings_action)
 
         # action with a state created
@@ -43,7 +48,7 @@ class MyWindow(Gtk.ApplicationWindow):
         about_action.connect("activate", self.about_callback)
         # action added to the application
         self.add_action(about_action)
-        
+
         img = Gtk.Image()
         
         img.set_from_file("bg_light.png") 
@@ -128,18 +133,11 @@ class MyWindow(Gtk.ApplicationWindow):
         open_dialog = dialog
         # if response is "ACCEPT" (the button "Open" has been clicked)
         if response_id == Gtk.ResponseType.ACCEPT:
-            print("opened: " + open_dialog.get_filename())
-            if tag.tagFile(open_dialog.get_filename()) == 0:
-                me = edit.info("Udało się", "Plik został otagowany.")
-                me.run()
-                me.destroy()
+            res = tag.tagFile(open_dialog.get_filename())
+            if res == -1:
+				printf("file not found in our database")
             else:
-                me = edit.ups_quest("Coś poszło nie tak.", "Czy chcesz poprawić tagi ręcznie?")
-                response = me.run()
-                me.destroy()
-                if response == Gtk.ResponseType.OK:
-                  edit.TagEditor(open_dialog.get_filename()).tagEditor()
-                  
+				print("tagged: " + open_dialog.get_filename())
         # if response is "CANCEL" (the button "Cancel" has been clicked)
         elif response_id == Gtk.ResponseType.CANCEL:
             print("cancelled: FileChooserAction.OPEN")
@@ -172,12 +170,46 @@ class MyWindow(Gtk.ApplicationWindow):
         if response_id == Gtk.ResponseType.ACCEPT:
             # an empty string (provisionally)
             tag.tagFolder(dir_open_dialog.get_filename())
-            print("opened: " + dir_open_dialog.get_filename())
+            print("tagged: " + dir_open_dialog.get_filename())
         # if response is "CANCEL" (the button "Cancel" has been clicked)
         elif response_id == Gtk.ResponseType.CANCEL:
             print("cancelled: FileChooserAction.OPEN")
         # destroy the FileChooserDialog
         dialog.destroy()
+        
+    # callback for creatinc collection
+    def col_open_callback(self, action, parameter):
+        # create a filechooserdialog to open:
+        # the arguments are: title of the window, parent_window, action,
+        # (buttons, response)
+        col_open_dialog = Gtk.FileChooserDialog("Pick a directory", self,
+                                            Gtk.FileChooserAction.SELECT_FOLDER,
+                                           (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                                            Gtk.STOCK_OPEN, Gtk.ResponseType.ACCEPT))
+
+        # not only local files can be selected in the file selector
+        col_open_dialog.set_local_only(False)
+        # dialog always on top of the textview window
+        col_open_dialog.set_modal(True)
+        # connect the dialog with the callback function open_response_cb()
+        col_open_dialog.connect("response", self.col_open_response_cb)
+        # show the dialog
+        col_open_dialog.show()
+
+    # callback function for the dialog col_open_dialog
+    def col_open_response_cb(self, dialog, response_id):
+        col_open_dialog = dialog
+        # if response is "ACCEPT" (the button "Open" has been clicked)
+        if response_id == Gtk.ResponseType.ACCEPT:
+            # an empty string (provisionally)
+            collection.createCollection(col_open_dialog.get_filename())
+            print("new collection in: " + col_open_dialog.get_filename())
+        # if response is "CANCEL" (the button "Cancel" has been clicked)
+        elif response_id == Gtk.ResponseType.CANCEL:
+            print("cancelled: FileChooserAction.OPEN")
+        # destroy the FileChooserDialog
+        dialog.destroy()
+
 
 class MyApplication(Gtk.Application):
 
