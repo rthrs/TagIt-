@@ -67,7 +67,9 @@ class TagEditor:
       title = sNone(fileh.tag.title)
       album = sNone(fileh.tag.album)
       artist = sNone(fileh.tag.artist)
-      date = iNone(fileh.tag.getBestDate())
+      date = fileh.tag.getBestDate()
+      if date is None:
+        date = eyed3.core.Date(year=1000)
       track = fileh.tag.track_num
       self.builder.get_object('title').set_text(title)
       self.builder.get_object('album').set_text(album)
