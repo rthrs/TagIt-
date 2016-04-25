@@ -11,16 +11,16 @@ def tagFolder(path):
         Returns:
             List of files which couldn't be tagged.
     """
-    # TODO: Deal with subfolders (currently they are treated as incorrect file).
+    # TODO: Deal with other file extensions than mp3.
     
     res = []
-    if path[-1:] != "/":
-        path = path+"/"
-        
-    for song in os.listdir(path):
-        if tagFile(path+song) == -1:
-            res.append(song)
-            
+
+    for root, dirs, files in os.walk(path):
+        for filename in files:
+            if ".mp3" in filename:
+                path = root+"/"+filename
+                if tagFile (path)== -1:
+                    res.append(path)        
     return res
 
 def tagFile(path):
