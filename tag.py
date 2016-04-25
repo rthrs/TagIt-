@@ -15,9 +15,9 @@ def tagFolder(path):
 
     for root, dirs, files in os.walk(path):
         for filename in files:
-            path = root+"/"+filename
-            if tagFile (path)== -1:
-                res.append(path)        
+            path2 = root+"/"+filename
+            if tagFile (path2)== -1:
+                res.append(path2[len(path)+1:])
     return res
 
 def tagFile(path):
