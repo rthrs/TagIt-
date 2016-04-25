@@ -1,6 +1,7 @@
 from recognize import recognize
 from database import getTags
 import eyed3
+import settings
 import os
 
 def tagFolder(path):
@@ -51,7 +52,8 @@ def tagFile(path):
     af.tag.save()
     
     filename, fileExtension = os.path.splitext(path)
-    os.rename(path, os.path.dirname(path)+"/"+tags['artist']+" - "+tags['title']+fileExtension)
+    settings.rename(path, tags['artist'], tags['title'], 
+                    tags['album'], fileExtension)
 
 def tag(path):
     """

@@ -5,6 +5,7 @@ from gi.repository import Gio
 from gi.repository import GObject
 from gi.repository import GdkPixbuf
 import eyed3 
+import settings
 
 
 def sNone(obj):
@@ -55,6 +56,7 @@ class TagEditor:
       fileh.tag.track_num = (int(self.builder.get_object('track_v').get_value()), 
                              fileh.tag.track_num[1])
       fileh.tag.save()
+      settings.rename(fileh.path, fileh.tag.artist, fileh.tag.title, fileh.tag.album, '.mp3')
       self.builder.get_object('tagEditor').destroy()
 
     def tagEditor(self):
