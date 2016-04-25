@@ -62,7 +62,7 @@ pod uwagę przy tagowaniu</attribute>
 		  </item>
 		  <item>
 			<attribute name="label">Domyślny format nazywania plików</attribute>
-			<attribute name="action">win.settings</attribute>
+			<attribute name="action">win.change_format</attribute>
 		  </item>
 		</section>   
 		   

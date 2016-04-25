@@ -53,6 +53,7 @@ def tagFile(path):
     
     filename, fileExtension = os.path.splitext(path)
     settings.rename(path, af.tag.artist, af.tag.title, af.tag.album, fileExtension)
+    return 0
 
 def tag(path):
     """

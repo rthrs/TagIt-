@@ -7,6 +7,7 @@ import sys
 import tag
 import edit
 import pylab
+import settings
 from gi.repository import GdkPixbuf
 pixbuf = GdkPixbuf.Pixbuf.new_from_file('logo.png')
 
@@ -35,6 +36,10 @@ class MyWindow(Gtk.ApplicationWindow):
         
         settings_action = Gio.SimpleAction.new("tagEdit", None)
         settings_action.connect("activate", self.tagEdit_callback)
+        self.add_action(settings_action)
+        
+        settings_action = Gio.SimpleAction.new("change_format", None)
+        settings_action.connect("activate", settings.change_format)
         self.add_action(settings_action)
 
         # action with a state created
