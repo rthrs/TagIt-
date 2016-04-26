@@ -1,8 +1,8 @@
+#-*- coding: utf-8 -*-
 """
     TagIt! GUI.
 """
 
-#-*- coding: utf-8 -*-
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import Gio

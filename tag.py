@@ -1,3 +1,7 @@
+"""
+    Functions for music files tagging.
+"""
+
 from recognize import recognize
 from database import getTags
 import eyed3

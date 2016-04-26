@@ -1,8 +1,8 @@
+# -*- coding: utf-8 -*-
 """
     Graphical interface for manual tag editor.
 """
 
-# -*- coding: utf-8 -*-
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import Gio
