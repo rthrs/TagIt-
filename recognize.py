@@ -29,7 +29,10 @@ def fingerprintRecognize(path):
     
     db = connect()
     hits = {}
+    endSearch = False
     for fingerprint in fp:
+        if endSearch:
+            break
         result = db.query("SELECT song_id, off FROM fingerprints WHERE hash='"+fingerprint[0]+"'").getresult()
         for res in result:
             resTuple = (res[0], res[1]-fingerprint[1])
@@ -37,8 +40,6 @@ def fingerprintRecognize(path):
                 hits[resTuple] += 1
             else:
                 hits[resTuple] = 1
-    
-    # print(hits)
     
     
     if hits != {}:

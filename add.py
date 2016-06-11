@@ -43,9 +43,13 @@ def addSong(path, tags={}):
     db = connect()
     added = db.insert('songs', tags) # add song to database
     
+    db.query("BEGIN")
+    
     # add fingerprints to database
     for fingerprint in fp:
         toAdd = {'hash' : fingerprint[0], 'off' : fingerprint[1], 'song_id' : added['song_id']}
         db.insert('fingerprints', toAdd)
+    
+    db.query("COMMIT")
         
     return 1
