@@ -38,6 +38,8 @@ def fingerprintRecognize(path):
             resTuple = (res[0], res[1]-fingerprint[1])
             if resTuple in hits:
                 hits[resTuple] += 1
+                if hits[resTuple] >= THRESHOLD:
+                    endSearch = True
             else:
                 hits[resTuple] = 1
     
