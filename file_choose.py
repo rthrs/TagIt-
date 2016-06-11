@@ -15,6 +15,8 @@ import settings
 import collection
 from gi.repository import GdkPixbuf
 
+from collection import watchFolders
+
 pixbuf = GdkPixbuf.Pixbuf.new_from_file('logo.png')
 
 
@@ -289,6 +291,7 @@ class Application(Gtk.Application):
         """
         self.quit()
 
+watchFolders()
 app = Application()
 exit_status = app.run(sys.argv)
 sys.exit(exit_status)

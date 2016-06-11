@@ -48,7 +48,7 @@ def addToCollection(filePath):
     return 0
     
 
-def watchNewFolder(folderPath):
+def watchNewFolder(folderPath, save=True):
     """
         Watches new folder for changes.
         Returns:
@@ -62,7 +62,21 @@ def watchNewFolder(folderPath):
         observer.start()
     except OSError:
         return -1
+    if save:
+        configFile = open('watchedFolders', 'a')
+        configFile.write(folderPath+"\n")
+        configFile.close()
     return 0
+
+def watchFolders():
+    """
+        Starts to watch all folders in config file.
+    """
+    configFile = open('watchedFolders', 'r')
+    for line in configFile:
+        watchNewFolder(line[:-1], False)
+    configFile.close()
+    
 
 def moveUp(src, dst):
     """
