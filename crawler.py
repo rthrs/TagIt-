@@ -33,7 +33,7 @@ from recognize import recognize
 
 """
     TODO:
-    - dodawanie albumu i okladek (jak bedzie mozliwosc w bazie)
+    - dodawanie albumu, roku, numeru na płycie i okladek (jak bedzie mozliwosc w bazie)
 
     NOTES:
     Additional options:
@@ -54,13 +54,22 @@ def tesktowo_tags(source):
     tree = html.fromstring(source)
     artist = tree.xpath('//*[@id="center"]/div[1]/a[3]/text()')
     title = tree.xpath('//*[@id="center"]/div[1]/a[4]/text()')
+    yreg = re.compile(r'Rok powstania:</th><td><p>([0-9]+)').search(source)
+    areg = re.compile(r'yty:</th><td><p>([^<]+)').search(source)
+    year, album = None, None
+    if areg is not None:
+        album = areg.group(1)
+    if yreg is not None:
+        year = yreg.group(1)
     if not artist or not title:
         raise Exception(ERROR_STR + '[crawler] cannot parse artist and title')
     tags = {
         'artist': artist[0],
-        'title': title[0]
+        'title': title[0],
+        'album': album,
+        'year': year
     }
-    print "[crawler] parsed tags: artist='%s' title='%s'" % (artist[0], title[0])
+    print "[crawler] parsed tags: artist='%s' title='%s' album='%s' year='%s'" % (artist[0], title[0], album, year)
     return tags
 
 
