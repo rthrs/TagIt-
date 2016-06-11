@@ -21,6 +21,7 @@ def rename(path, artist, title, album, fileExtension):
     else:
         filename = title + " - " + artist + " - " + album
     os.rename(path, os.path.dirname(path) + "/" + filename + fileExtension)
+    return os.path.dirname(path) + "/" + filename + fileExtension
 
 
 def save_format_callback(action, builder):

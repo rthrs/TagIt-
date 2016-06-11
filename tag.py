@@ -27,17 +27,16 @@ def tagFolder(path):
     return res
 
 
-def tagFile(path):
+def tagFile(path, returnFilePath=False):
     """
         Tags single file and renames it in format Artist - Song name.
         Args:
             path: path to the file.
+            returnFilePath: if True function will return new fileName instead of -1
         Retruns:
             0 if tagging was successful.
             -1 if tagging failed.
     """
-    # TODO: options for naming file
-    
     # print("Tagging: "+path)
     song_id = recognize(path)
     if song_id == -1:
@@ -55,7 +54,9 @@ def tagFile(path):
     af.tag.save()
     
     filename, fileExtension = os.path.splitext(path)
-    settings.rename(path, af.tag.artist, af.tag.title, af.tag.album, fileExtension)
+    newFilename = settings.rename(path, af.tag.artist, af.tag.title, af.tag.album, fileExtension)
+    if returnFilePath:
+        return newFilename
     return 0
 
 

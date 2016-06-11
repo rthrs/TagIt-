@@ -6,9 +6,63 @@ import os
 import tag
 import eyed3
 import sys
+import thread
+import pickle
+
+from watchdog.observers import Observer
+from watchdog.events import FileCreatedEvent, FileSystemEventHandler
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
+
+class FileCreatedEventHandler(FileSystemEventHandler):
+    """
+        Waits for files created in collections.
+    """
+    
+    def on_created(self, event):
+        what = 'directory' if event.is_directory else 'file'
+        if what == 'file':
+            addToCollection(event.src_path)
+
+def addToCollection(filePath):
+    """
+        Adds file to collection it's currently in.
+    """        
+    f = tag.tagFile(filePath, True)
+    folder = os.path.split(filePath)[0]
+    if folder[-1:] != "/":
+        folder += "/"
+    
+    if f == -1: # didn't tag file
+        if not os.path.isdir(folder+"unknown"):
+            os.mkdir(folder+"unknown")
+        os.rename(filePath, folder+"unknown/"+os.path.split(filePath)[1])
+        return -1
+        
+    artist = eyed3.load(f).tag.artist
+    if not os.path.isdir(folder+artist):
+        os.mkdir(folder+artist)
+    filename = os.path.split(f)[1]
+    os.rename(f, folder+artist+"/"+filename)
+    return 0
+    
+
+def watchNewFolder(folderPath):
+    """
+        Watches new folder for changes.
+        Returns:
+            -1 if start was not successful
+            0 otherwise
+    """
+    eventHandler = FileCreatedEventHandler()
+    observer = Observer()
+    observer.schedule(eventHandler, folderPath)
+    try:
+        observer.start()
+    except OSError:
+        return -1
+    return 0
 
 def moveUp(src, dst):
     """
@@ -72,7 +126,7 @@ def createCollection(path):
     untagged = tag.tagFolder(path)
     if untagged != []:
         os.mkdir(path+"unknown")
-    for f in untagged:
+    for f in untagged:  
         os.rename(path+f, path+"unknown/"+f)
         
     tagged = []
@@ -86,3 +140,5 @@ def createCollection(path):
             os.mkdir(path+artist)
         filename = os.path.split(f)[1]
         os.rename(f, path+artist+"/"+filename)
+        
+    watchNewFolder(path)
