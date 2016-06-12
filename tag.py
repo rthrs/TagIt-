@@ -16,7 +16,7 @@ def tagFolder(path):
             path: path to the folder.
         Returns:
             List of files which couldn't be tagged.
-    """ 
+    """
     res = []
 
     for root, dirs, files in os.walk(path):
@@ -43,6 +43,8 @@ def tagFile(path, returnFilePath=False):
         return -1
     tags = getTags(song_id)
     af = eyed3.load(path)
+    if not af.tag:
+        af.initTag()
     af.tag.artist = tags['artist'].decode('utf-8')
     af.tag.title = tags['title'].decode('utf-8')
     if tags['album'] != None:
@@ -52,7 +54,7 @@ def tagFile(path, returnFilePath=False):
     if tags['track'] != None:
         af.tag.track_num = tags['track']
     af.tag.save()
-    
+
     filename, fileExtension = os.path.splitext(path)
     newFilename = settings.rename(path, af.tag.artist, af.tag.title, af.tag.album, fileExtension)
     if returnFilePath:
@@ -68,6 +70,5 @@ def tag(path):
         Returns:
             List of files for which tagging failed.
     """
-    # TODO: implement it using 
+    # TODO: implement it using
     pass
-

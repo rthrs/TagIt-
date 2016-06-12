@@ -33,7 +33,7 @@ from recognize import recognize
 
 """
     TODO:
-    - dodawanie albumu, roku, numeru na płycie i okladek (jak bedzie mozliwosc w bazie)
+    - dodawanie numeru na płycie i okladek (jak bedzie mozliwosc w bazie)
 
     NOTES:
     Additional options:
@@ -49,7 +49,7 @@ def html_dl(url):
 
 def tesktowo_tags(source):
     """
-        Retrieve proper songs tags from page source.
+        Retrieve proper songs tags from tesktowo.pl page source.
     """
     tree = html.fromstring(source)
     artist = tree.xpath('//*[@id="center"]/div[1]/a[3]/text()')
@@ -74,6 +74,9 @@ def tesktowo_tags(source):
 
 
 def tekstowo_youtube_url(source):
+    """
+        Retrieve youtube link to song from tekstowo.pl page source.
+    """
     reg = re.compile(r"var videoID = \"(.*)\";")
     try:
         video_id = reg.search(source).group(1)
@@ -115,12 +118,19 @@ def youtube_dl_mp3(url, directory=expanduser('~/')):
 
 
 def remove_file(path, save):
+    """
+        Remove file if save option is set to True
+    """
     if not save:
         os.remove(path)
         print "[crawler] removing audio file..."
 
 
 def tekstowo_song(url, save):
+    """
+        Crawl music content from given tekstowo.pl url to singel song and
+        add it to the database unless it's already in it or some errors occured.
+    """
     print '[crawler] processing tekstowo_song({}, {})'.format(url, save)
     source = html_dl(url)
     try :
@@ -146,6 +156,10 @@ def tekstowo_song(url, save):
 
 
 def page_iterator(url, save, fun):
+    """
+        Iterate through links from tekstowo.pl url which conatins list of
+        either artists with given letter or specific artists songs.
+    """
     tekstowo_url = 'http://www.tekstowo.pl'
     while True:
         source = html_dl(url)
@@ -161,15 +175,24 @@ def page_iterator(url, save, fun):
 
 
 def tekstowo_artist(url, save):
+    """
+        Crawl data from tekstowo.pl url to list of specific artists songs.
+    """
     page_iterator(url, save, tekstowo_song)
 
 
 def tekstowo_letter(letter, save):
+    """
+        Crawl data from tekstowo.pl url to list of artists with given letter.
+    """
     url = 'http://www.tekstowo.pl/artysci_na,{}.html'.format(letter)
     page_iterator(url, save, tekstowo_artist)
 
 
 def tekstowo_all(save):
+    """
+        Crawl entire tekstowo.pl.
+    """
     for l in string.ascii_uppercase:
         tekstowo_letter(l, save)
     tekstowo_letter('pozostale', save)
