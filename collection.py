@@ -119,7 +119,7 @@ def moveFiles(path):
             os.rmdir(newPath)
     
 
-def createCollection(path):
+def createCollection(path, status=None, aborted=[False]):
     """
         Creates collection from a folder.
         Creates a new folder for each artist and copies his music to this folder.
@@ -127,32 +127,45 @@ def createCollection(path):
         Args:
             path: Path to folder.
         Returns:
-            -1 if path is not correct.
-            1 if collection was successfully created.
+            -1, 0, 0 if path is not correct.
+            1, list of untagged, list of tagged otherwise.
     """
     if not os.path.isdir(path):
-        return -1
+        return -1, 0, 0
     
     if path[-1:] != "/":
         path += "/"
     
     moveFiles(path)
-    untagged = tag.tagFolder(path)
+    untagged = tag.tagFolder(path, status, aborted)
     if untagged != []:
         os.mkdir(path+"unknown")
     for f in untagged:  
         os.rename(path+f, path+"unknown/"+f)
+    
+    if aborted[0] == True:
+        return -1, 0, 0
         
     tagged = []
     for f in os.listdir(path):
+        if aborted[0] == True:
+            return -1, 0, 0
         if not os.path.isdir(path+f):
             tagged.append(path+f)
             
-    for f in tagged:
+    prog = 0
+    for f in tagged:   
+        if aborted[0] == True:
+            return -1, 0, 0
         artist = eyed3.load(f).tag.artist
         if not os.path.isdir(path+artist):
             os.mkdir(path+artist)
         filename = os.path.split(f)[1]
         os.rename(f, path+artist+"/"+filename)
+        prog += 1
+        if status is not None:
+            status(float(prog) / len(tagged))
+ 
         
     watchNewFolder(path)
+    return 1, untagged, tagged

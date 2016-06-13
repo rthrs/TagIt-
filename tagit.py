@@ -216,19 +216,37 @@ class MyWindow(Gtk.ApplicationWindow):
         # show the dialog
         col_open_dialog.show()
 
+    
+    #callback function for colection creating
+    def col_open_done(self, answer, path):
+        succ, un, t = answer
+        s = ""
+        for file in un:
+            s += "\n" + file
+        if succ > 0:
+            me = edit.info("Zokończono tagowanie", "Liczba pominiętych plików: " + str(len(un)) + "\nOtagowanych: " + str(len(t)))
+            print "Pominięto: " + s
+        else:
+          me = edit.info("Uups", "Coś poszło nie tak")
+        me.run()
+        me.destroy()
+
+
     # callback function for the dialog col_open_dialog
     def col_open_response_cb(self, dialog, response_id):
         col_open_dialog = dialog
         # if response is "ACCEPT" (the button "Open" has been clicked)
         if response_id == Gtk.ResponseType.ACCEPT:
             # an empty string (provisionally)
-            collection.createCollection(col_open_dialog.get_filename())
+            w = animation.WorkProgress(collection.createCollection, (col_open_dialog.get_filename(), ), self.col_open_done)
+            w.run()
             print("new collection in: " + col_open_dialog.get_filename())
         # if response is "CANCEL" (the button "Cancel" has been clicked)
         elif response_id == Gtk.ResponseType.CANCEL:
             print("cancelled: FileChooserAction.OPEN")
         # destroy the FileChooserDialog
         dialog.destroy()
+
 
     # callback function for tagEditor
     def tagEdit_callback(self, action, parameter):
