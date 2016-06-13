@@ -1,3 +1,4 @@
+#!/usr/bin/python
 #-*- coding: utf-8 -*-
 """
   TagIt! GUI.
@@ -30,23 +31,25 @@ class MyWindow(Gtk.ApplicationWindow):
     path = "/home"
 
     def currentDir(self):
-        for x in os.listdir(self.path):
+        for x in sorted(os.listdir(self.path)):
             if x[0] != '.' and os.path.isdir(self.path + "/" + x):
                 self.software_liststore.append([x, "folder"])
-        for x in os.listdir(self.path):
-            if x[0] != '.' and os.path.isfile(self.path + "/" + x) and os.path.splitext(x)[1] in (".mp3"):
+        for x in sorted(os.listdir(self.path)):
+            if x[0] != '.' and os.path.isfile(self.path + "/" + x) and os.path.splitext(x)[1] in (".mp3") and os.path.splitext(x)[1] != '':
                 self.software_liststore.append([x, "audio-x-generic"])
 
     def __init__(self, app):
         Gtk.Window.__init__(self, title="TagIt!", application=app)
         self.set_default_size(300, 300)
-        self.set_border_width(5)
+        self.set_border_width(15)
+        
         self.set_icon_from_file('img/icon_cpy.png')
 
         #Setting up the self.grid in which the elements are to be positionned
         self.grid = Gtk.Grid()
         self.grid.set_column_homogeneous(True)
         self.grid.set_row_homogeneous(True)
+        self.grid.set_column_spacing(20)
         self.add(self.grid)
 
         #Creating the ListStore model
@@ -89,10 +92,10 @@ class MyWindow(Gtk.ApplicationWindow):
         #setting up the layout, putting the treeview in a scrollwindow, and the buttons in a row
         self.scrollable_treelist = Gtk.ScrolledWindow()
         self.scrollable_treelist.set_vexpand(True)
-        self.grid.attach(self.scrollable_treelist, 0, 0, 2, 10)
-
-        frame = Gtk.Frame(label="W jaki sposób nazywać pliki?")
-        formatb = Gtk.Builder()
+        self.grid.attach(self.scrollable_treelist, 0, 0, 1, 7)
+        
+        frame = Gtk.Frame(label="Wybierz format nazywania plików")
+        formatb = Gtk.Builder() 
         formatb.add_from_file("format.glade")
         formatbox = formatb.get_object("box2")
         formatb.get_object("format_window").remove(formatbox)
@@ -103,11 +106,11 @@ class MyWindow(Gtk.ApplicationWindow):
         frame.add(formatbox)
         box = Gtk.Box()
         miniMenu = Gtk.Box()
-
-
-        self.grid.attach_next_to(frame, self.scrollable_treelist, Gtk.PositionType.RIGHT, 2, 8)
-        #self.grid.attach_next_to(self.buttons[0], self.scrollable_treelist, Gtk.PositionType.BOTTOM, 1, 1)
-
+        frame2 = Gtk.Frame(label="Jakiś label")		
+                
+        self.grid.attach_next_to(frame, self.scrollable_treelist, Gtk.PositionType.RIGHT, 1, 2)        
+        self.grid.attach_next_to(frame2, frame, Gtk.PositionType.BOTTOM, 1, 2)        
+        #self.grid.attach_next_to(self.buttons[0], self.scrollable_treelist, Gtk.PositionType.BOTTOM, 1, 1)        
         self.grid.attach_next_to(box, self.scrollable_treelist, Gtk.PositionType.BOTTOM, 1, 1)
         box.add(self.buttons[0])
         box.set_border_width(15)
@@ -116,9 +119,10 @@ class MyWindow(Gtk.ApplicationWindow):
         miniMenu.add(self.buttons[1])
         #if counter == 2:
         miniMenu.add(self.buttons[2])
-        miniMenu.set_border_width(10)
-
-        self.grid.attach_next_to(miniMenu, frame, Gtk.PositionType.BOTTOM, 1, 1)
+        #miniMenu.attach_next_to(self.buttons[2], self.buttons[1], 1, 7)
+        miniMenu.set_border_width(20)
+                
+        self.grid.attach_next_to(miniMenu, frame2, Gtk.PositionType.BOTTOM, 1, 1)
         self.scrollable_treelist.add(self.treeview)
 
 
@@ -203,8 +207,8 @@ class MyWindow(Gtk.ApplicationWindow):
     def on_click_change_button(self, widget):
         model, it = widget.get_selection().get_selected()
         print("w change")
-        if model[it][0]:
-            print("||||| " + self.path +  " ||||||")
+        if it is not None and model[it][0]:
+            print("||||| " + self.path +  " ||||||")            
             print("||||| " + model[it][0] + " ||||||")
 
             if os.path.isdir(self.path + "/" + model[it][0]):

@@ -6,5 +6,5 @@
 
 DBNAME = 'music'
 HOST = 'localhost'
-USER = 'wojtek'
+USER = 'monika'
 PASSWD = 'test'
