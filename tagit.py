@@ -279,7 +279,7 @@ class MyWindow(Gtk.ApplicationWindow):
         if os.path.isdir(filename):
             print("It's directory")
         else:
-            h = animation.WorkSpinner(tag.tagFile, (filename,), self.open_response_cb_done)
+            h = animation.WorkSpinner(self, tag.tagFile, (filename,), self.open_response_cb_done)
             h.run()
                         
     # callback function for about (see the AboutDialog example)
@@ -359,7 +359,7 @@ class MyWindow(Gtk.ApplicationWindow):
         # if response is "ACCEPT" (the button "Open" has been clicked)
         if response_id == Gtk.ResponseType.ACCEPT:
             print("opened: " + open_dialog.get_filename())
-            h = animation.WorkSpinner(tag.tagFile, (open_dialog.get_filename(),), self.open_response_cb_done)
+            h = animation.WorkSpinner(self, tag.tagFile, (open_dialog.get_filename(),), self.open_response_cb_done)
             dialog.destroy()
             h.run()
                  
@@ -392,7 +392,7 @@ class MyWindow(Gtk.ApplicationWindow):
         # if response is "ACCEPT" (the button "Open" has been clicked)
         if response_id == Gtk.ResponseType.ACCEPT:
             # an empty string (provisionally)
-            w = animation.WorkProgress(tag.tagFolder, (dir_open_dialog.get_filename(), ), self.dir_open_done)
+            w = animation.WorkProgress(self, tag.tagFolder, (dir_open_dialog.get_filename(), ), self.dir_open_done)
             w.run()
             #tag.tagFolder(dir_open_dialog.get_filename())
             print("opened: " + dir_open_dialog.get_filename())
