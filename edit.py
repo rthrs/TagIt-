@@ -10,6 +10,7 @@ from gi.repository import GObject
 from gi.repository import GdkPixbuf
 import eyed3
 import settings
+import sys
 
 
 def sNone(obj):
