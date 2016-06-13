@@ -294,7 +294,9 @@ class MyWindow(Gtk.ApplicationWindow):
         filename = self.getFilePath()
         if label == "Otaguj ręcznie":
             print(filename) 
-            edit.TagEditor(filename).tagEditor()
+            edit.TagEditor(filename).tagEditor(self)
+            self.software_liststore.clear()
+            self.currentDir()
         else:
             print("Tworzę kolekcję")
             # an empty string (provisionally)
