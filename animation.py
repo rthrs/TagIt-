@@ -53,6 +53,8 @@ class HeavyWork:
       self.aborted[0] = True
       self.t.join()
       self.s.destroy()
+      self.parent.software_liststore.clear()
+      self.parent.currentDir()
       self.callback(*((answer, ) + self.args))
     return False
   

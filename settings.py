@@ -24,7 +24,7 @@ def rename(path, artist, title, album, fileExtension):
     return os.path.dirname(path) + "/" + filename + fileExtension
 
 
-def save_format_callback(action, builder):
+def save_format_callback(action, builder, mainwin=None):
     checks = [builder.get_object('artist_title'),
               builder.get_object('title_artist'),
               builder.get_object('title_artist_album')]
@@ -32,7 +32,8 @@ def save_format_callback(action, builder):
         if checks[i].get_active():
             global _name_option
             _name_option = i + 1
-    builder.get_object('format_window').destroy()
+    if mainwin is None:
+        builder.get_object('format_window').destroy()
 
 
 def change_format(action, parameter):

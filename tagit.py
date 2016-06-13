@@ -97,7 +97,14 @@ class MyWindow(Gtk.ApplicationWindow):
         self.scrollable_treelist.set_vexpand(True)
         self.grid.attach(self.scrollable_treelist, 0, 0, 2, 10)
         
-        frame = Gtk.Frame(label="label")
+        frame = Gtk.Frame(label="W jaki sposób nazywać pliki?")
+        formatb = Gtk.Builder() 
+        formatb.add_from_file("format.glade")
+        formatbox = formatb.get_object("box2")
+        formatb.get_object("format_window").remove(formatbox)
+        formatb.get_object('ok_button').connect('clicked', 
+                settings.save_format_callback, formatb, self)
+        frame.add(formatbox)
         box = Gtk.Box()
         miniMenu = Gtk.Box()
 
