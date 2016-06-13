@@ -96,7 +96,7 @@ def youtube_dl_mp3(url, directory=expanduser('~/')):
             directory: path to downlad (home directory is default)
     """
 
-    outtmpl = directory + '%(title)s.%(ext)s'
+    outtmpl = directory + '%(id)s.%(ext)s'
     options = {
         'format': 'bestaudio/best', # choice of quality
         'extractaudio' : True,      # only keep the audio
@@ -109,7 +109,7 @@ def youtube_dl_mp3(url, directory=expanduser('~/')):
     ydl.download([url])
     info = ydl.extract_info(url, download=False)
 
-    path = directory + info['title'] + '.' + info['ext']
+    path = directory + info['id'] + '.' + info['ext']
     print '[crawler] path to downloaded audio: %s' % path
     return {
         'path': path,
