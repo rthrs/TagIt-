@@ -41,7 +41,7 @@ class MyWindow(Gtk.ApplicationWindow):
                 
     def __init__(self, app):
         Gtk.Window.__init__(self, title="TagIt!", application=app)
-        self.set_default_size(900, 700)
+        self.set_default_size(300, 300)
         self.set_border_width(5)
         self.set_icon_from_file('img/icon_cpy.png')
 
@@ -70,7 +70,8 @@ class MyWindow(Gtk.ApplicationWindow):
 
 
         #get double clicks
-        self.treeview.connect("row-activated", self.on_double_click);
+        self.treeview.connect("row-activated", self.on_double_click)
+        self.treeview.connect("cursor-changed", self.on_click_change_button)        
 
         #creating buttons to filter by programming language, and setting up their events
         self.buttons = list()
@@ -78,14 +79,9 @@ class MyWindow(Gtk.ApplicationWindow):
         button = Gtk.Button.new_from_icon_name("go-previous", 4)
         self.buttons.append(button)
         #counter = 0
-        for i in ["Otaguj automatycznie", "Otaguj recznie"]:
-            if os.path.isdir and i=="Otaguj recznie":
-                button = Gtk.Button("nic tu nie ma")
-                self.buttons.append(button)
-            else:
-                button = Gtk.Button(i)
-                #counter += 1
-                self.buttons.append(button)
+        for i in ["Otaguj automatycznie", "Otaguj ręcznie"]:
+            button = Gtk.Button(i)
+            self.buttons.append(button)
                 
         self.buttons[0].connect("clicked", self.on_selection_button_clicked)
         self.buttons[1].connect("clicked", self.ButtonAutoTag_callback)
@@ -123,9 +119,6 @@ class MyWindow(Gtk.ApplicationWindow):
         miniMenu.set_border_width(10)
                 
         self.grid.attach_next_to(miniMenu, frame, Gtk.PositionType.BOTTOM, 1, 1)
-        #self.grid.attach_next_to(self.buttons[2], self.buttons[1], Gtk.PositionType.BOTTOM, 1, 1)
-        #for i, button in enumerate(self.buttons[2:]):
-        #    self.grid.attach_next_to(button, self.buttons[i], Gtk.PositionType.BOTTOM, 1, 1)
         self.scrollable_treelist.add(self.treeview)
 
 
@@ -197,8 +190,6 @@ class MyWindow(Gtk.ApplicationWindow):
 
         self.software_liststore.clear()
         self.path = os.path.split(self.path)[0]
-        self.buttons[2].set_label("zmienilem sie")
-        print("powinienem sie zmienic :c")
         self.currentDir()
         
     def on_double_click(self, widget, c, d):
@@ -208,7 +199,23 @@ class MyWindow(Gtk.ApplicationWindow):
             self.path = self.path + "/" + model[it][0]
             self.software_liststore.clear()
             self.currentDir()
-        
+
+    def on_click_change_button(self, widget):
+        model, it = widget.get_selection().get_selected()
+        print("w change")
+        if model[it][0]:
+            print("||||| " + self.path +  " ||||||")            
+            print("||||| " + model[it][0] + " ||||||")
+
+            if os.path.isdir(self.path + "/" + model[it][0]):
+                print("dir")
+                self.buttons[2].set_label("Utwórz kolekcję")
+                self.buttons[1].set_label("Otaguj folder")
+            else:
+                print("is file")
+                self.buttons[2].set_label("Otaguj ręcznie")
+                self.buttons[1].set_label("Otaguj automatycznie")
+                        
     # callback for creatinc collection
     def col_open_callback(self, action, parameter):
         # create a filechooserdialog to open:
@@ -278,18 +285,32 @@ class MyWindow(Gtk.ApplicationWindow):
       if response == Gtk.ResponseType.OK:
         edit.TagEditor(filename).tagEditor()
 
-    # callback function for BUTTON tagEditor
-    def ButtonTagEdit_callback(self, widget):    
+    # callback function for BUTTON ManualtagEditor or creating collection
+    def ButtonTagEdit_callback(self, widget): 
+        label = self.buttons[2].get_label()
+        print(label)
         filename = self.getFilePath()
-        print(filename) 
-        edit.TagEditor(filename).tagEditor()
+        if label == "Otaguj ręcznie":
+            print(filename) 
+            edit.TagEditor(filename).tagEditor()
+        else:
+            print("Tworzę kolekcję")
+            # an empty string (provisionally)
+            w = animation.WorkProgress(self, collection.createCollection, (filename, ), self.col_open_done)
+            w.run()
+            print("new collection in: " + col_open_dialog.get_filename())            
         
-    # callback function for BUTTON  AutoTag
+    # callback function for BUTTON  AutoTag file or directory
     def ButtonAutoTag_callback(self, widget):    
         filename = self.getFilePath()
         print(filename)
         if os.path.isdir(filename):
             print("It's directory")
+            # an empty string (provisionally)
+            w = animation.WorkProgress(self, tag.tagFolder, (filename, ), self.dir_open_done)
+            w.run()
+            #tag.tagFolder(dir_open_dialog.get_filename())
+            print("opened: " + dir_open_dialog.get_filename())            
         else:
             h = animation.WorkSpinner(self, tag.tagFile, (filename,), self.open_response_cb_done)
             h.run()
