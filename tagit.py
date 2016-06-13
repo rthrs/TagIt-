@@ -29,8 +29,6 @@ icons = ["go-previous","edit-cut", "edit-paste", "edit-copy"]
 class MyWindow(Gtk.ApplicationWindow):
     path = "/home"
 
-
-
     def currentDir(self):
         for x in os.listdir(self.path):
             if x[0] != '.' and os.path.isdir(self.path + "/" + x):
@@ -98,6 +96,8 @@ class MyWindow(Gtk.ApplicationWindow):
         formatb.add_from_file("format.glade")
         formatbox = formatb.get_object("box2")
         formatb.get_object("format_window").remove(formatbox)
+        desc = formatb.get_object("format")
+        formatb.get_object("box2").remove(desc)
         formatb.get_object('ok_button').connect('clicked',
                 settings.save_format_callback, formatb, self)
         frame.add(formatbox)
@@ -298,7 +298,7 @@ class MyWindow(Gtk.ApplicationWindow):
             # an empty string (provisionally)
             w = animation.WorkProgress(self, collection.createCollection, (filename, ), self.col_open_done)
             w.run()
-            print("new collection in: " + col_open_dialog.get_filename())
+            print("new collection in: " + filename)
 
     # callback function for BUTTON  AutoTag file or directory
     def ButtonAutoTag_callback(self, widget):
