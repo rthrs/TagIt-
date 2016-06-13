@@ -129,10 +129,10 @@ def show_info(builder, filepath):
         artist = sNone(fileh.tag.artist)
         date = str(sNone(fileh.tag.getBestDate()))
         track = fileh.tag.track_num
-        if track is not None or track[0] is not None:
-            track = str(track[0])
-        else:
+        if track is None or track[0] is None:
             track = ''
+        else:
+            track = str(track[0])
         builder.get_object('title_fi').set_text(title)
         builder.get_object('album_fi').set_text(album)
         builder.get_object('artist_fi').set_text(artist)
