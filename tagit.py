@@ -1,3 +1,4 @@
+#!/usr/bin/python
 #-*- coding: utf-8 -*-
 """
   TagIt! GUI.
@@ -107,9 +108,10 @@ class MyWindow(Gtk.ApplicationWindow):
         frame.add(formatbox)
         box = Gtk.Box()
         miniMenu = Gtk.Box()
-
+        frame2 = Gtk.Frame(label="Jakiś label")		
                 
         self.grid.attach_next_to(frame, self.scrollable_treelist, Gtk.PositionType.RIGHT, 1, 2)        
+        self.grid.attach_next_to(frame2, frame, Gtk.PositionType.BOTTOM, 1, 2)        
         #self.grid.attach_next_to(self.buttons[0], self.scrollable_treelist, Gtk.PositionType.BOTTOM, 1, 1)        
         
         self.grid.attach_next_to(box, self.scrollable_treelist, Gtk.PositionType.BOTTOM, 1, 1)
@@ -123,7 +125,7 @@ class MyWindow(Gtk.ApplicationWindow):
         #miniMenu.attach_next_to(self.buttons[2], self.buttons[1], 1, 7)
         miniMenu.set_border_width(20)
                 
-        self.grid.attach_next_to(miniMenu, frame, Gtk.PositionType.BOTTOM, 1, 1)
+        self.grid.attach_next_to(miniMenu, frame2, Gtk.PositionType.BOTTOM, 1, 1)
         self.scrollable_treelist.add(self.treeview)
 
 
