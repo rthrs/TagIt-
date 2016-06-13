@@ -11,6 +11,7 @@ from gi.repository import GdkPixbuf
 import eyed3
 import edit
 import settings
+import sys
 
 
 def sNone(obj):

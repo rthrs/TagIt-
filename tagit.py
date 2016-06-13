@@ -29,8 +29,6 @@ icons = ["go-previous","edit-cut", "edit-paste", "edit-copy"]
 class MyWindow(Gtk.ApplicationWindow):
     path = "/home"
 
-
-
     def currentDir(self):
         for x in os.listdir(self.path):
             if x[0] != '.' and os.path.isdir(self.path + "/" + x):
@@ -38,7 +36,7 @@ class MyWindow(Gtk.ApplicationWindow):
         for x in os.listdir(self.path):
             if x[0] != '.' and os.path.isfile(self.path + "/" + x) and os.path.splitext(x)[1] in (".mp3"):
                 self.software_liststore.append([x, "audio-x-generic"])
-                
+
     def __init__(self, app):
         Gtk.Window.__init__(self, title="TagIt!", application=app)
         self.set_default_size(300, 300)
@@ -58,7 +56,7 @@ class MyWindow(Gtk.ApplicationWindow):
 
         #creating the treeview, making it use the filter as a model, and adding the columns
         self.treeview = Gtk.TreeView(model=self.software_liststore)
-        
+
         renderer_pixbuf = Gtk.CellRendererPixbuf()
         column_pixbuf = Gtk.TreeViewColumn("", renderer_pixbuf, icon_name=1)
         Gtk.TreeViewColumn.set_fixed_width(column_pixbuf, 1)
@@ -66,12 +64,12 @@ class MyWindow(Gtk.ApplicationWindow):
 
         renderer_text = Gtk.CellRendererText()
         column_text = Gtk.TreeViewColumn("Nazwa", renderer_text, text=0)
-        self.treeview.append_column(column_text)        
+        self.treeview.append_column(column_text)
 
 
         #get double clicks
         self.treeview.connect("row-activated", self.on_double_click)
-        self.treeview.connect("cursor-changed", self.on_click_change_button)        
+        self.treeview.connect("cursor-changed", self.on_click_change_button)
 
         #creating buttons to filter by programming language, and setting up their events
         self.buttons = list()
@@ -82,7 +80,7 @@ class MyWindow(Gtk.ApplicationWindow):
         for i in ["Otaguj automatycznie", "Otaguj ręcznie"]:
             button = Gtk.Button(i)
             self.buttons.append(button)
-                
+
         self.buttons[0].connect("clicked", self.on_selection_button_clicked)
         self.buttons[1].connect("clicked", self.ButtonAutoTag_callback)
         #if counter == 2:
@@ -92,24 +90,24 @@ class MyWindow(Gtk.ApplicationWindow):
         self.scrollable_treelist = Gtk.ScrolledWindow()
         self.scrollable_treelist.set_vexpand(True)
         self.grid.attach(self.scrollable_treelist, 0, 0, 2, 10)
-        
+
         frame = Gtk.Frame(label="W jaki sposób nazywać pliki?")
-        formatb = Gtk.Builder() 
+        formatb = Gtk.Builder()
         formatb.add_from_file("format.glade")
         formatbox = formatb.get_object("box2")
         formatb.get_object("format_window").remove(formatbox)
         desc = formatb.get_object("format")
         formatb.get_object("box2").remove(desc)
-        formatb.get_object('ok_button').connect('clicked', 
+        formatb.get_object('ok_button').connect('clicked',
                 settings.save_format_callback, formatb, self)
         frame.add(formatbox)
         box = Gtk.Box()
         miniMenu = Gtk.Box()
 
-                
-        self.grid.attach_next_to(frame, self.scrollable_treelist, Gtk.PositionType.RIGHT, 2, 8)        
-        #self.grid.attach_next_to(self.buttons[0], self.scrollable_treelist, Gtk.PositionType.BOTTOM, 1, 1)        
-        
+
+        self.grid.attach_next_to(frame, self.scrollable_treelist, Gtk.PositionType.RIGHT, 2, 8)
+        #self.grid.attach_next_to(self.buttons[0], self.scrollable_treelist, Gtk.PositionType.BOTTOM, 1, 1)
+
         self.grid.attach_next_to(box, self.scrollable_treelist, Gtk.PositionType.BOTTOM, 1, 1)
         box.add(self.buttons[0])
         box.set_border_width(15)
@@ -119,7 +117,7 @@ class MyWindow(Gtk.ApplicationWindow):
         #if counter == 2:
         miniMenu.add(self.buttons[2])
         miniMenu.set_border_width(10)
-                
+
         self.grid.attach_next_to(miniMenu, frame, Gtk.PositionType.BOTTOM, 1, 1)
         self.scrollable_treelist.add(self.treeview)
 
@@ -132,20 +130,20 @@ class MyWindow(Gtk.ApplicationWindow):
         open_action = Gio.SimpleAction.new("open", None)
         open_action.connect("activate", self.open_callback)
         self.add_action(open_action)
- 
+
         observer_action = Gio.SimpleAction.new("update_col", None)
-        observer_action.connect("activate", 
+        observer_action.connect("activate",
                         lambda x, y: collection.watchFolders())
-        self.add_action(observer_action)       
+        self.add_action(observer_action)
 
         dir_open_action = Gio.SimpleAction.new("dir_open", None)
         dir_open_action.connect("activate", self.dir_open_callback)
         self.add_action(dir_open_action)
-        
+
         settings_action = Gio.SimpleAction.new("settings", None)
         settings_action.connect("activate", self.settings_callback)
         self.add_action(settings_action)
-        
+
         settings_action = Gio.SimpleAction.new("tagEdit", None)
         settings_action.connect("activate", self.tagEdit_callback)
         self.add_action(settings_action)
@@ -157,7 +155,7 @@ class MyWindow(Gtk.ApplicationWindow):
         ButtonAutoTag_action = Gio.SimpleAction.new("ButtonAutoTag", None)
         ButtonAutoTag_action.connect("activate", self.ButtonAutoTag_callback)
         self.add_action(ButtonAutoTag_action)
-                
+
         settings_action = Gio.SimpleAction.new("change_format", None)
         settings_action.connect("activate", settings.change_format)
         self.add_action(settings_action)
@@ -167,7 +165,7 @@ class MyWindow(Gtk.ApplicationWindow):
         # action connected to the callback function
         about_action.connect("activate", self.about_callback)
         # action added to the application
-        self.add_action(about_action)        
+        self.add_action(about_action)
 
 
         self.show_all()
@@ -188,12 +186,12 @@ class MyWindow(Gtk.ApplicationWindow):
         """Called on any of the button clicks"""
         # we set the current language filter to the button's label
         self.current_filter_language = widget.get_label()
-        
+
 
         self.software_liststore.clear()
         self.path = os.path.split(self.path)[0]
         self.currentDir()
-        
+
     def on_double_click(self, widget, c, d):
         model, it = widget.get_selection().get_selected()
         print(model[it][0])
@@ -206,7 +204,7 @@ class MyWindow(Gtk.ApplicationWindow):
         model, it = widget.get_selection().get_selected()
         print("w change")
         if model[it][0]:
-            print("||||| " + self.path +  " ||||||")            
+            print("||||| " + self.path +  " ||||||")
             print("||||| " + model[it][0] + " ||||||")
 
             if os.path.isdir(self.path + "/" + model[it][0]):
@@ -217,7 +215,7 @@ class MyWindow(Gtk.ApplicationWindow):
                 print("is file")
                 self.buttons[2].set_label("Otaguj ręcznie")
                 self.buttons[1].set_label("Otaguj automatycznie")
-                        
+
     # callback for creatinc collection
     def col_open_callback(self, action, parameter):
         # create a filechooserdialog to open:
@@ -237,7 +235,7 @@ class MyWindow(Gtk.ApplicationWindow):
         # show the dialog
         col_open_dialog.show()
 
-    
+
     #callback function for colection creating
     def col_open_done(self, answer, path):
         succ, un, t = answer
@@ -273,7 +271,7 @@ class MyWindow(Gtk.ApplicationWindow):
     def tagEdit_callback(self, action, parameter):
       dialog = Gtk.FileChooserDialog(title="Wybierz plik",
                action=Gtk.FileChooserAction.OPEN,
-               buttons=["Otwórz", Gtk.ResponseType.OK, 
+               buttons=["Otwórz", Gtk.ResponseType.OK,
               "Powrót", Gtk.ResponseType.CANCEL])
 
       filter = Gtk.FileFilter()
@@ -283,29 +281,27 @@ class MyWindow(Gtk.ApplicationWindow):
 
       response = dialog.run()
       filename = dialog.get_filename()
-      dialog.destroy() 
+      dialog.destroy()
       if response == Gtk.ResponseType.OK:
         edit.TagEditor(filename).tagEditor()
 
     # callback function for BUTTON ManualtagEditor or creating collection
-    def ButtonTagEdit_callback(self, widget): 
+    def ButtonTagEdit_callback(self, widget):
         label = self.buttons[2].get_label()
         print(label)
         filename = self.getFilePath()
         if label == "Otaguj ręcznie":
             print(filename) 
             edit.TagEditor(filename).tagEditor(self)
-            self.software_liststore.clear()
-            self.currentDir()
         else:
             print("Tworzę kolekcję")
             # an empty string (provisionally)
             w = animation.WorkProgress(self, collection.createCollection, (filename, ), self.col_open_done)
             w.run()
-            print("new collection in: " + filename)            
-        
+            print("new collection in: " + filename)
+
     # callback function for BUTTON  AutoTag file or directory
-    def ButtonAutoTag_callback(self, widget):    
+    def ButtonAutoTag_callback(self, widget):
         filename = self.getFilePath()
         print(filename)
         if os.path.isdir(filename):
@@ -314,11 +310,11 @@ class MyWindow(Gtk.ApplicationWindow):
             w = animation.WorkProgress(self, tag.tagFolder, (filename, ), self.dir_open_done)
             w.run()
             #tag.tagFolder(dir_open_dialog.get_filename())
-            print("opened: " + dir_open_dialog.get_filename())            
+            print("opened: " + dir_open_dialog.get_filename())
         else:
             h = animation.WorkSpinner(self, tag.tagFile, (filename,), self.open_response_cb_done)
             h.run()
-                        
+
     # callback function for about (see the AboutDialog example)
     def about_callback(self, action, parameter):
         # a  Gtk.AboutDialog
@@ -337,7 +333,7 @@ class MyWindow(Gtk.ApplicationWindow):
         aboutdialog.set_comments('Aplikacja umożliwiająca wygodne, '
         +'automatyczne tagowanie i nazywanie plików z muzyką, zapewniająca '
         +'przejrzystość w folderach. Dzięki niej można łatwo odnaleźć konkretny'
-        +' utwór, czy też wszystkie utwory danego wykonawcy.')        
+        +' utwór, czy też wszystkie utwory danego wykonawcy.')
         aboutdialog.set_logo(pixbuf)
         aboutdialog.set_icon_from_file('img/icon_cpy.png')
 
@@ -373,7 +369,7 @@ class MyWindow(Gtk.ApplicationWindow):
         open_dialog.connect("response", self.open_response_cb)
         # show the dialog
         open_dialog.show()
-    
+
     def open_response_cb_done(self, answer, path):
       if answer == 0:
         me = edit.info("Udało się", "Plik został otagowany.")
@@ -399,7 +395,7 @@ class MyWindow(Gtk.ApplicationWindow):
             h = animation.WorkSpinner(self, tag.tagFile, (open_dialog.get_filename(),), self.open_response_cb_done)
             dialog.destroy()
             h.run()
-                 
+
         # if response is "CANCEL" (the button "Cancel" has been clicked)
         elif response_id == Gtk.ResponseType.CANCEL:
             dialog.destroy()
@@ -408,16 +404,16 @@ class MyWindow(Gtk.ApplicationWindow):
 
 
     def dir_open_done(self, answer, path):
-      s = ""
-      for file in answer:
-        s += "\n" + file
-      if len(answer) > 0:
-        me = edit.info("Zokończono tagowanie", "Liczba pominiętych plików: " + str(len(answer)))
-        print "Pominięto: " + s
-      else:
-        me = edit.info("Zakończono tagowaniue", "Pomyślnie otagowano wszystkie pliki!")
-      me.run()
-      me.destroy()
+        s = ""
+        for file in answer:
+            s += "\n" + file
+        if len(answer) > 0:
+            me = edit.info("Zakończono tagowanie", "Liczba pominiętych plików: " + str(len(answer)))
+            print "Pominięto: " + s
+        else:
+            me = edit.info("Zakończono tagowanie", "Pomyślnie otagowano wszystkie pliki!")
+        me.run()
+        me.destroy()
 
 
     # callback function for the dialog dir_open_dialog
@@ -458,7 +454,7 @@ class MyWindow(Gtk.ApplicationWindow):
         dir_open_dialog.connect("response", self.dir_open_response_cb)
         # show the dialog
         dir_open_dialog.show()
-        
+
 '''
 
 win = TreeViewFilterWindow()
