@@ -303,7 +303,7 @@ class MyWindow(Gtk.ApplicationWindow):
             # an empty string (provisionally)
             w = animation.WorkProgress(self, collection.createCollection, (filename, ), self.col_open_done)
             w.run()
-            print("new collection in: " + col_open_dialog.get_filename())            
+            print("new collection in: " + filename)            
         
     # callback function for BUTTON  AutoTag file or directory
     def ButtonAutoTag_callback(self, widget):    

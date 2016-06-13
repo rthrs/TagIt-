@@ -57,6 +57,7 @@ class TagEditor:
         fileh.tag.album = unicode(self.builder.get_object('album').get_text(), "UTF-8")
         fileh.tag.artist = unicode(self.builder.get_object('artist').get_text(), "UTF-8")
         year = int(self.builder.get_object('year_v').get_value())
+        print year
         fileh.tag._setDate("TDRC", year)
         fileh.tag.original_release_date = eyed3.core.Date(year=year)
         fileh.tag.release_date = eyed3.core.Date(year=year)
