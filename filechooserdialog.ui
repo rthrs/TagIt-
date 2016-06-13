@@ -36,6 +36,10 @@
 			<attribute name="label">Utwórz kolekcję z folderu</attribute>
 			<attribute name="action">win.col_open</attribute>
 		  </item>
+      <item>
+			<attribute name="label">Aktualizuj monitorowane kolekcje</attribute>
+			<attribute name="action">win.update_col</attribute>
+		  </item>
 		  <item>
 			<attribute name="label">Usuń duplikaty</attribute>
 			<attribute name="action">win.dir_open</attribute>

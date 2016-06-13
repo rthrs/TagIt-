@@ -130,7 +130,12 @@ class MyWindow(Gtk.ApplicationWindow):
         open_action = Gio.SimpleAction.new("open", None)
         open_action.connect("activate", self.open_callback)
         self.add_action(open_action)
-        
+ 
+        observer_action = Gio.SimpleAction.new("update_col", None)
+        observer_action.connect("activate", 
+                        lambda x, y: collection.watchFolders())
+        self.add_action(observer_action)       
+
         dir_open_action = Gio.SimpleAction.new("dir_open", None)
         dir_open_action.connect("activate", self.dir_open_callback)
         self.add_action(dir_open_action)
