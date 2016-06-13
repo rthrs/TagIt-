@@ -238,7 +238,7 @@ class MyWindow(Gtk.ApplicationWindow):
         # if response is "ACCEPT" (the button "Open" has been clicked)
         if response_id == Gtk.ResponseType.ACCEPT:
             # an empty string (provisionally)
-            w = animation.WorkProgress(collection.createCollection, (col_open_dialog.get_filename(), ), self.col_open_done)
+            w = animation.WorkProgress(self, collection.createCollection, (col_open_dialog.get_filename(), ), self.col_open_done)
             w.run()
             print("new collection in: " + col_open_dialog.get_filename())
         # if response is "CANCEL" (the button "Cancel" has been clicked)
