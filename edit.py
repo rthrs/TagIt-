@@ -121,6 +121,27 @@ class TagEditor:
         self.builder.get_object('tagEditor').show_all()
 
 
+def show_info(builder, filepath):
+    try:
+        fileh = eyed3.load(filepath)
+        title = sNone(fileh.tag.title)
+        album = sNone(fileh.tag.album)
+        artist = sNone(fileh.tag.artist)
+        date = str(sNone(fileh.tag.getBestDate()))
+        track = fileh.tag.track_num
+        if track is not None or track[0] is not None:
+            track = str(track[0])
+        else:
+            track = ''
+        builder.get_object('title_fi').set_text(title)
+        builder.get_object('album_fi').set_text(album)
+        builder.get_object('artist_fi').set_text(artist)
+        builder.get_object('track_fi').set_text(track)
+        builder.get_object('year_fi').set_text(date)
+    except:
+        pass
+
+
 # Messages
 
 def info(title, message):

@@ -106,10 +106,14 @@ class MyWindow(Gtk.ApplicationWindow):
         frame.add(formatbox)
         box = Gtk.Box()
         miniMenu = Gtk.Box()
-        frame2 = Gtk.Frame(label="Jakiś label")		
-                
+        frame2 = Gtk.Frame(label="Aktualne tagi")		        
+        self.taginfob = Gtk.Builder()
+        self.taginfob.add_from_file("edit.glade")
+        taginfo = self.taginfob.get_object("tagsinfo")
+        self.taginfob.get_object("wininfo").remove(taginfo)
+        frame2.add(taginfo)
         self.grid.attach_next_to(frame, self.scrollable_treelist, Gtk.PositionType.RIGHT, 1, 2)        
-        self.grid.attach_next_to(frame2, frame, Gtk.PositionType.BOTTOM, 1, 2)        
+        self.grid.attach_next_to(frame2, frame, Gtk.PositionType.BOTTOM, 1, 4)        
         #self.grid.attach_next_to(self.buttons[0], self.scrollable_treelist, Gtk.PositionType.BOTTOM, 1, 1)        
         self.grid.attach_next_to(box, self.scrollable_treelist, Gtk.PositionType.BOTTOM, 1, 1)
         box.add(self.buttons[0])
@@ -211,7 +215,8 @@ class MyWindow(Gtk.ApplicationWindow):
             print("||||| " + self.path +  " ||||||")            
             print("||||| " + model[it][0] + " ||||||")
 
-            if os.path.isdir(self.path + "/" + model[it][0]):
+            filepath = self.path + "/" + model[it][0]
+            if os.path.isdir(filepath):
                 print("dir")
                 self.buttons[2].set_label("Utwórz kolekcję")
                 self.buttons[1].set_label("Otaguj folder")
@@ -219,6 +224,7 @@ class MyWindow(Gtk.ApplicationWindow):
                 print("is file")
                 self.buttons[2].set_label("Otaguj ręcznie")
                 self.buttons[1].set_label("Otaguj automatycznie")
+                edit.show_info(self.taginfob, filepath)
 
     # callback for creatinc collection
     def col_open_callback(self, action, parameter):
@@ -287,7 +293,7 @@ class MyWindow(Gtk.ApplicationWindow):
       filename = dialog.get_filename()
       dialog.destroy()
       if response == Gtk.ResponseType.OK:
-        edit.TagEditor(filename).tagEditor()
+        edit.TagEditor(filename).tagEditor(self)
 
     # callback function for BUTTON ManualtagEditor or creating collection
     def ButtonTagEdit_callback(self, widget):
@@ -384,7 +390,7 @@ class MyWindow(Gtk.ApplicationWindow):
         response = me.run()
         me.destroy()
         if response == Gtk.ResponseType.OK:
-          edit.TagEditor(path).tagEditor()
+          edit.TagEditor(path).tagEditor(self)
 
 
     # callback function for the dialog open_dialog
