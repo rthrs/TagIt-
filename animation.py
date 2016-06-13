@@ -89,7 +89,7 @@ class WorkProgress(HeavyWork):
       self.s.destroy()
 
   def update_bar(self, fraction):
-    print str(fraction) + " kek"
+    print str(fraction)
     GObject.idle_add(self.s.builder.get_object("bar").set_fraction, fraction)
 
   def run(self):

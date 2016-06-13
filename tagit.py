@@ -98,6 +98,8 @@ class MyWindow(Gtk.ApplicationWindow):
         formatb.add_from_file("format.glade")
         formatbox = formatb.get_object("box2")
         formatb.get_object("format_window").remove(formatbox)
+        desc = formatb.get_object("format")
+        formatb.get_object("box2").remove(desc)
         formatb.get_object('ok_button').connect('clicked', 
                 settings.save_format_callback, formatb, self)
         frame.add(formatbox)
