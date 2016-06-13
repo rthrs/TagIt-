@@ -276,8 +276,9 @@ class MyWindow(Gtk.ApplicationWindow):
     def ButtonAutoTag_callback(self, widget):    
         filename = self.getFilePath()
         print(filename)
-        if os.path.isdir:
+        if os.path.isdir(filename):
             print("It's directory")
+        else:
             h = animation.WorkSpinner(tag.tagFile, (filename,), self.open_response_cb_done)
             h.run()
                         
