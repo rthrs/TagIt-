@@ -9,7 +9,7 @@ import settings
 import os
 
 
-def tagFolder(path):
+def tagFolder(path, status=None, aborted=[False]):
     """
         Tags all file in a given folder.
         Args:
@@ -19,11 +19,24 @@ def tagFolder(path):
     """
     res = []
 
+    nfiles = 0
     for root, dirs, files in os.walk(path):
+      for filename in files:
+        nfiles += 1
+    prog = 0
+ 
+    for root, dirs, files in os.walk(path):
+        if aborted[0] == True:
+            break
         for filename in files:
+            if aborted[0] == True:
+                break
             path2 = root+"/"+filename
             if tagFile (path2)== -1:
                 res.append(path2[len(path)+1:])
+            prog += 1
+            if status is not None:
+                status(float(prog) / nfiles)
     return res
 
 
