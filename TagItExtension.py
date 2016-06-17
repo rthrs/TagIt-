@@ -1,25 +1,36 @@
 #-*- coding: utf-8 -*-
-"""
-    Context menu extension for nautilus that enables either clicked song
-    or directory tagging. Paste this file to the following directory:
-    ~/.local/share/nautilus-python/extensions
+## @package TagItExtension
+#  Context menu extension for nautilus that enables either clicked song
+#  or directory tagging.
+#
+#  Paste this file to the following directory:
+#  ~/.local/share/nautilus-python/extensions
+#
+#  Crate directory if not exists (while TagIt! installation process) using:
+#  os.makedirs(expanduser('~/.local/share/nautilus-python/extensions'))
+##
 
-    Crate directory if not exists (while TagIt! installation process) using:
-    os.makedirs(expanduser('~/.local/share/nautilus-python/extensions'))
-"""
 from gi.repository import Nautilus, GObject, Gtk
 import os
 import sys
-sys.path.insert(0, "/home/rth/Github/TagIt")
+# TODO unfortunately hardcoded, change that
+sys.path.insert(0, "[path to source of TagIt]")
 import tag
 import edit
 import animation
 
+
 class ColumnExtension(GObject.GObject, Nautilus.MenuProvider):
+    """
+        Nautilus context menu extension column class for TagIt features
+    """
     def __init__(self):
         pass
 
     def file_done(self, answer, path):
+        """
+            Tagging single file exit handler.
+        """
         me = None
         if answer == 0:
             me = edit.info("Udało się", "Plik został otagowany.")
@@ -29,18 +40,26 @@ class ColumnExtension(GObject.GObject, Nautilus.MenuProvider):
         me.destroy()
 
     def dir_done(self, answer, path):
+        """
+            Tagging directory exit handler.
+        """
         s = ""
         for file in answer:
             s += "\n" + file
         if len(answer) > 0:
-            me = edit.info("Zakończono tagowanie", "Liczba pominiętych plików: " + str(len(answer)))
+            me = edit.info("Zakończono tagowanie",\
+                "Liczba pominiętych plików: " + str(len(answer)))
             print "Pominięto: " + s
         else:
-            me = edit.info("Zakończono tagowanie", "Pomyślnie otagowano wszystkie pliki!")
+            me = edit.info("Zakończono tagowanie",\
+                "Pomyślnie otagowano wszystkie pliki!")
         me.run()
         me.destroy()
 
     def menu_activate_cb(self, menu, file):
+        """
+            Callback function for get_file_items.
+        """
         path = file.get_location().get_path()
         #win = Gtk.ApplicationWindow()
         if file.is_directory():
@@ -56,6 +75,9 @@ class ColumnExtension(GObject.GObject, Nautilus.MenuProvider):
         #win.destroy()
 
     def get_file_items(self, window, files):
+        """
+            Overrided Nautilus.MenuProvider method.
+        """
         if len(files) != 1:
             return
 

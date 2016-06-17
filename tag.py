@@ -1,6 +1,6 @@
-"""
-    Functions for music files tagging.
-"""
+## @package tag
+#  Functions for music files tagging.
+##
 
 from recognize import recognize
 from database import getTags
@@ -24,7 +24,7 @@ def tagFolder(path, status=None, aborted=[False]):
       for filename in files:
         nfiles += 1
     prog = 0
- 
+
     for root, dirs, files in os.walk(path):
         if aborted[0] == True:
             break

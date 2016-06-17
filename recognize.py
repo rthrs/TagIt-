@@ -1,6 +1,6 @@
-"""
-    Functions for music files recognition.
-"""
+## @package recognize
+#  Functions for music files recognition.
+##
 
 from fingerprints import generateFingerprints
 from database import connect
@@ -17,16 +17,16 @@ def fingerprintRecognize(path):
             id of a song in databse if song was found.
             -1 if song was not recognized or path does not contain a valid audio file.
     """
-    
+
     # Fingerprint first 7 seconds of a song.
     # TODO: Maybe this value should be randed or added to config.
     start = 0
     stop = 10000
     fp = generateFingerprints(path, startTime=start, endTime=stop)
-    
+
     if fp == []:
         return -1
-    
+
     db = connect()
     hits = {}
     endSearch = False
@@ -42,19 +42,19 @@ def fingerprintRecognize(path):
                     endSearch = True
             else:
                 hits[resTuple] = 1
-    
-    
+
+
     if hits != {}:
         res = max(hits.iteritems(), key=operator.itemgetter(1))[0]
-    
+
     if hits != {} and hits[res] >= THRESHOLD:
         # print(res)
         return res[0]
     else:
         return -1
-    
 
-def recognize(path):    
+
+def recognize(path):
     """
         Recognizes song from path.
         Args:

@@ -1,6 +1,6 @@
-"""
-    Graphical interface for settings.
-"""
+## @package settings
+#  Graphical interface for settings.
+##
 
 from gi.repository import Gtk
 from gi.repository import Gdk

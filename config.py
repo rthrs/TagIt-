@@ -1,6 +1,6 @@
-"""
-    Configuration file.
-"""
+## @package config
+#  Configuration file.
+##
 
 # SPECTOGRAM
 DATA_POINTS = 4096

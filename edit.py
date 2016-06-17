@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-"""
-    Graphical interface for manual tag editor.
-"""
+## @package edit
+#  Graphical interface for manual tag editor.
+##
 
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -63,7 +63,7 @@ class TagEditor:
             me.run()
             me.destroy()
         else:
-            fileh.tag.title = title 
+            fileh.tag.title = title
             fileh.tag.album = album
             fileh.tag.artist = artist
             year = int(self.builder.get_object('year_v').get_value())
@@ -97,7 +97,7 @@ class TagEditor:
         if fileh.tag is None:
             self.errorOpening()
             return
-        
+
         self.win = win
 
         title = sNone(fileh.tag.title)

@@ -1,55 +1,66 @@
 # -*- coding: utf-8 -*-
+## @package crawler
+#  Web crawler that retrieves music content from given source, analyzes it and
+#  adds songs with proper tags into TagIt! database unless they currently exist.
+#
+#  Supported sites: tekstowo.pl, youtube.com
+#
+#  Title tag convention: New word always starts with capital letter
+#
+#  For more usage details run crawler.py with -h option.
+##
 """
-    Web crawler that retrieves music content from given source, analyses it and
-    adds songs with proper tags into TagIt! database unless they currently exist.
+Web crawler that retrieves music content from given source, analyzes it and
+adds songs with proper tags into TagIt! database unless they currently exist.
 
-    Supported sites: tekstowo.pl, youtube.com
-    Title tag convention: New word always starts with capital letter
+Supported sites: tekstowo.pl, youtube.com
+Title tag convention: New word always starts with capital letter
 
-    Source options:
-        --tekstowo-song=[url]       crawl data from [url] which starts with tekstowo.pl/piosenka
-        --tekstowo-artist=[url]     crawl data from [url] which starts with tekstowo.pl/piosenki_artysty
-        --tekstowo-letter=[letter]  crawl data from tekstowo.pl/artysci_na,[letter].html
-                                    [letter] could be also named as 'pozostale'
-        --tekstowo-all              crawl entire tekstowo.pl
+Source options:
+    --tekstowo-song=[url]       crawl data from [url] which starts with
+                                tekstowo.pl/piosenka
+    --tekstowo-artist=[url]     crawl data from [url] which starts with
+                                tekstowo.pl/piosenki_artysty
+    --tekstowo-letter=[letter]  crawl data from tekstowo.pl/artysci_na,[letter].html
+                                [letter] could be also named as 'pozostale'
+    --tekstowo-all              crawl entire tekstowo.pl
 
-    Additional options:
-        -s  save downloaded audio files (in /home/[user])
+Additional options:
+    -s  save downloaded audio files (in /home/[user])
 """
 from __future__ import unicode_literals
-
+from os.path import expanduser
+from termcolor import colored
+from lxml import html
+from add import addSong
+from recognize import recognize
 import sys
 import os
 import getopt
-import youtube_dl #pip install youtube-dl
+import youtube_dl
 import urllib2
 import re
 import string
-from os.path import expanduser
-from termcolor import colored #pip install termcolor
-from lxml import html # new library, perhaps pip install unneeded
-from add import addSong
-from recognize import recognize
-
-"""
-    TODO:
-    - dodawanie numeru na płycie i okladek (jak bedzie mozliwosc w bazie)
-
-    NOTES:
-    Additional options:
-        -s [url]    save downloaded audio files ([url] - optional path to download
-                    directory, has to be absolut path, default is /home/[user])
-"""
 
 ERROR_STR = '\033[31mERROR:\033[0m '
 
 def html_dl(url):
+    """
+        Download HTML source code from given url.
+        Args:
+            url: url to page for download
+    """
     return urllib2.urlopen(url).read()
 
 
 def tesktowo_tags(source):
     """
         Retrieve proper songs tags from tesktowo.pl page source.
+        Args:
+            source: tekstowo.pl HTML source string
+        Returns:
+            dictionary with metadata containing tags like
+            'artist', 'title', 'album' and 'year'
     """
     tree = html.fromstring(source)
     artist = tree.xpath('//*[@id="center"]/div[1]/a[3]/text()')
@@ -69,13 +80,17 @@ def tesktowo_tags(source):
         'album': album,
         'year': year
     }
-    print "[crawler] parsed tags: artist='%s' title='%s' album='%s' year='%s'" % (artist[0], title[0], album, year)
+    print "[crawler] parsed tags: artist='%s'title='%s' album='%s' year='%s'" % (artist[0], title[0], album, year)
     return tags
 
 
 def tekstowo_youtube_url(source):
     """
         Retrieve youtube link to song from tekstowo.pl page source.
+        Args:
+            source: tekstowo.pl HTML source string
+        Returns:
+            youtube url to song from given page
     """
     reg = re.compile(r"var videoID = \"(.*)\";")
     try:
@@ -93,9 +108,11 @@ def youtube_dl_mp3(url, directory=expanduser('~/')):
         Download audio from given youtube video url.
         Args:
             url: youtube video url
-            directory: path to downlad (home directory is default)
+            directory: path to download folder
+        Returns:
+            dictionary with 'path' to downloaded song and 'title' of
+            given youtube video
     """
-
     outtmpl = directory + '%(id)s.%(ext)s'
     options = {
         'format': 'bestaudio/best', # choice of quality
@@ -120,6 +137,9 @@ def youtube_dl_mp3(url, directory=expanduser('~/')):
 def remove_file(path, save):
     """
         Remove file if save option is set to True
+        Args:
+            path: path to a file for possible removal
+            save: if set to true, remove given file, do nothing otherwise
     """
     if not save:
         os.remove(path)
@@ -130,6 +150,10 @@ def tekstowo_song(url, save):
     """
         Crawl music content from given tekstowo.pl url to singel song and
         add it to the database unless it's already in it or some errors occured.
+        Args:
+            url: tesktowo.pl url for single file
+            save: choose if save downloaded song or remove it after
+                  correct addition to database
     """
     print '[crawler] processing tekstowo_song({}, {})'.format(url, save)
     source = html_dl(url)
@@ -159,6 +183,11 @@ def page_iterator(url, save, fun):
     """
         Iterate through links from tekstowo.pl url which conatins list of
         either artists with given letter or specific artists songs.
+        Args:
+            url: tesktowo.pl url
+            save: choose if save downloaded song or remove it after
+                  correct addition to database
+            fun: function handler for collected links
     """
     tekstowo_url = 'http://www.tekstowo.pl'
     while True:
@@ -177,6 +206,10 @@ def page_iterator(url, save, fun):
 def tekstowo_artist(url, save):
     """
         Crawl data from tekstowo.pl url to list of specific artists songs.
+        Args:
+            url: tesktowo.pl url to artists songs page
+            save: choose if save downloaded songs after correct
+                  addition to database
     """
     page_iterator(url, save, tekstowo_song)
 
@@ -184,6 +217,10 @@ def tekstowo_artist(url, save):
 def tekstowo_letter(letter, save):
     """
         Crawl data from tekstowo.pl url to list of artists with given letter.
+        Args:
+            url: tesktowo.pl url to list of artists with given letter
+            save: choose if save downloaded songs after correct
+                  addition to database
     """
     url = 'http://www.tekstowo.pl/artysci_na,{}.html'.format(letter)
     page_iterator(url, save, tekstowo_artist)
@@ -192,6 +229,9 @@ def tekstowo_letter(letter, save):
 def tekstowo_all(save):
     """
         Crawl entire tekstowo.pl.
+        Args:
+            save: choose if save downloaded songs after correct
+                  addition to database
     """
     for l in string.ascii_uppercase:
         tekstowo_letter(l, save)
@@ -199,6 +239,9 @@ def tekstowo_all(save):
 
 
 def main():
+    """
+        Main function.
+    """
     long_opt = [
         "help",
         "tekstowo-song=",

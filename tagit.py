@@ -1,8 +1,8 @@
 #!/usr/bin/python
 #-*- coding: utf-8 -*-
-"""
-  TagIt! GUI.
-"""
+## @package tagit
+#  TagIt! GUI.
+##
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -42,7 +42,7 @@ class MyWindow(Gtk.ApplicationWindow):
         Gtk.Window.__init__(self, title="TagIt!", application=app)
         self.set_default_size(300, 300)
         self.set_border_width(15)
-        
+
         self.set_icon_from_file('img/icon_cpy.png')
 
         #Setting up the self.grid in which the elements are to be positionned
@@ -93,9 +93,9 @@ class MyWindow(Gtk.ApplicationWindow):
         self.scrollable_treelist = Gtk.ScrolledWindow()
         self.scrollable_treelist.set_vexpand(True)
         self.grid.attach(self.scrollable_treelist, 0, 0, 1, 7)
-        
+
         frame = Gtk.Frame(label="Wybierz format nazywania plików")
-        formatb = Gtk.Builder() 
+        formatb = Gtk.Builder()
         formatb.add_from_file("format.glade")
         formatbox = formatb.get_object("box2")
         formatb.get_object("format_window").remove(formatbox)
@@ -106,15 +106,15 @@ class MyWindow(Gtk.ApplicationWindow):
         frame.add(formatbox)
         box = Gtk.Box()
         miniMenu = Gtk.Box()
-        frame2 = Gtk.Frame(label="Aktualne tagi")		        
+        frame2 = Gtk.Frame(label="Aktualne tagi")
         self.taginfob = Gtk.Builder()
         self.taginfob.add_from_file("edit.glade")
         taginfo = self.taginfob.get_object("tagsinfo")
         self.taginfob.get_object("wininfo").remove(taginfo)
         frame2.add(taginfo)
-        self.grid.attach_next_to(frame, self.scrollable_treelist, Gtk.PositionType.RIGHT, 1, 2)        
-        self.grid.attach_next_to(frame2, frame, Gtk.PositionType.BOTTOM, 1, 4)        
-        #self.grid.attach_next_to(self.buttons[0], self.scrollable_treelist, Gtk.PositionType.BOTTOM, 1, 1)        
+        self.grid.attach_next_to(frame, self.scrollable_treelist, Gtk.PositionType.RIGHT, 1, 2)
+        self.grid.attach_next_to(frame2, frame, Gtk.PositionType.BOTTOM, 1, 4)
+        #self.grid.attach_next_to(self.buttons[0], self.scrollable_treelist, Gtk.PositionType.BOTTOM, 1, 1)
         self.grid.attach_next_to(box, self.scrollable_treelist, Gtk.PositionType.BOTTOM, 1, 1)
         box.add(self.buttons[0])
         box.set_border_width(15)
@@ -125,7 +125,7 @@ class MyWindow(Gtk.ApplicationWindow):
         miniMenu.add(self.buttons[2])
         #miniMenu.attach_next_to(self.buttons[2], self.buttons[1], 1, 7)
         miniMenu.set_border_width(20)
-                
+
         self.grid.attach_next_to(miniMenu, frame2, Gtk.PositionType.BOTTOM, 1, 1)
         self.scrollable_treelist.add(self.treeview)
 
@@ -212,7 +212,7 @@ class MyWindow(Gtk.ApplicationWindow):
         model, it = widget.get_selection().get_selected()
         print("w change")
         if it is not None and model[it][0]:
-            print("||||| " + self.path +  " ||||||")            
+            print("||||| " + self.path +  " ||||||")
             print("||||| " + model[it][0] + " ||||||")
 
             filepath = self.path + "/" + model[it][0]
@@ -301,7 +301,7 @@ class MyWindow(Gtk.ApplicationWindow):
         print(label)
         filename = self.getFilePath()
         if label == "Otaguj ręcznie":
-            print(filename) 
+            print(filename)
             edit.TagEditor(filename).tagEditor(self)
         else:
             print("Tworzę kolekcję")

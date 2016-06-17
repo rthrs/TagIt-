@@ -1,6 +1,6 @@
-"""
-    Functions for creating and adding files to collections.
-"""
+## @package collection
+#  Functions for creating and adding files to collections.
+##
 
 import os
 import tag
@@ -19,34 +19,35 @@ class FileCreatedEventHandler(FileSystemEventHandler):
     """
         Waits for files created in collections.
     """
-    
+
     def on_created(self, event):
         what = 'directory' if event.is_directory else 'file'
         if what == 'file':
             addToCollection(event.src_path)
 
+
 def addToCollection(filePath):
     """
         Adds file to collection it's currently in.
-    """        
+    """
     f = tag.tagFile(filePath, True)
     folder = os.path.split(filePath)[0]
     if folder[-1:] != "/":
         folder += "/"
-    
+
     if f == -1: # didn't tag file
         if not os.path.isdir(folder+"unknown"):
             os.mkdir(folder+"unknown")
         os.rename(filePath, folder+"unknown/"+os.path.split(filePath)[1])
         return -1
-        
+
     artist = eyed3.load(f).tag.artist
     if not os.path.isdir(folder+artist):
         os.mkdir(folder+artist)
     filename = os.path.split(f)[1]
     os.rename(f, folder+artist+"/"+filename)
     return 0
-    
+
 
 def watchNewFolder(folderPath, save=True):
     """
@@ -68,6 +69,7 @@ def watchNewFolder(folderPath, save=True):
         configFile.close()
     return 0
 
+
 def watchFolders():
     """
         Starts to watch all folders in config file.
@@ -76,7 +78,7 @@ def watchFolders():
     for line in configFile:
         watchNewFolder(line[:-1], False)
     configFile.close()
-    
+
 
 def moveUp(src, dst):
     """
@@ -86,16 +88,17 @@ def moveUp(src, dst):
     """
     if not (os.path.isdir(src) and os.path.isdir(dst)):
         return -1
-    
+
     if src[-1:] != "/":
         src += "/"
-    
+
     if dst[-1:] != "/":
-        dst += "/"    
-        
+        dst += "/"
+
     for f in os.listdir(src):
         if not os.path.isdir(f):
             os.rename(src+f, dst+src.replace('/', '_')+f)
+
 
 def moveFiles(path):
     """
@@ -106,10 +109,10 @@ def moveFiles(path):
             -1 if acction was unsuccessful
             1 otherwise
     """
-    # TODO: may not work with weird filenames 
+    # TODO: may not work with weird filenames
     if not os.path.isdir(path):
         return -1
-    
+
     # path is a correct directory
     for d in os.listdir(path):
         newPath = path+"/"+d
@@ -117,7 +120,7 @@ def moveFiles(path):
             moveFiles(newPath)
             moveUp(newPath, path)
             os.rmdir(newPath)
-    
+
 
 def createCollection(path, status=None, aborted=[False]):
     """
@@ -132,29 +135,29 @@ def createCollection(path, status=None, aborted=[False]):
     """
     if not os.path.isdir(path):
         return -1, 0, 0
-    
+
     if path[-1:] != "/":
         path += "/"
-    
+
     moveFiles(path)
     untagged = tag.tagFolder(path, status, aborted)
     if untagged != []:
         os.mkdir(path+"unknown")
-    for f in untagged:  
+    for f in untagged:
         os.rename(path+f, path+"unknown/"+f)
-    
+
     if aborted[0] == True:
         return -1, 0, 0
-        
+
     tagged = []
     for f in os.listdir(path):
         if aborted[0] == True:
             return -1, 0, 0
         if not os.path.isdir(path+f):
             tagged.append(path+f)
-            
+
     prog = 0
-    for f in tagged:   
+    for f in tagged:
         if aborted[0] == True:
             return -1, 0, 0
         artist = eyed3.load(f).tag.artist
@@ -165,7 +168,6 @@ def createCollection(path, status=None, aborted=[False]):
         prog += 1
         if status is not None:
             status(float(prog) / len(tagged))
- 
-        
+
     watchNewFolder(path)
     return 1, untagged, tagged

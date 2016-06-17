@@ -1,7 +1,9 @@
-"""
-    Functions for generating fingerprints.
-    Some code based on https://github.com/worldveil/dejavu/blob/master/dejavu/fingerprint.py
-"""
+## @package fingerprints
+#  Functions for generating fingerprints.
+#
+#  Some code based on:
+#  https://github.com/worldveil/dejavu/blob/master/dejavu/fingerprint.py
+##
 
 from pydub import AudioSegment
 
@@ -28,17 +30,17 @@ def generateSpectogram(song):
     song = song.set_channels(1) # sample only one channel
     # song = song.set_frame_rate(FREQ)
     # song = song.low_pass_filter(FREQ/2) # don't use too high frequencies
-    
+
     frameRate = song.frame_rate
     frames = pylab.fromstring(song.raw_data, 'Int16')
-    
+
     # generate spectogram
     spectrum, freqs, t = mlab.specgram(frames, Fs=frameRate, NFFT=DATA_POINTS, noverlap=NUM_OVER)
-    
+
     # change to log scale
     spectrum = 10 * np.log2(spectrum)
     spectrum[spectrum == -np.inf] = 0
-    
+
     return spectrum
 
 def get2DPeaks(arr2D):
@@ -76,7 +78,7 @@ def get2DPeaks(arr2D):
     time_idx = [x[0] for x in peaks_filtered]
 
     return zip(frequency_idx, time_idx)
-    
+
 def getHashes(peaks):
     """
         Generates hashes of peaks.
@@ -85,19 +87,19 @@ def getHashes(peaks):
         Returns:
             List of pairs (hash, time).
     """
-    
+
     res = []
-    
+
     for i in range(0, len(peaks)):
         for j in range(i+1, min(len(peaks), i+NUM_OF_PEAKS+1)):
             f1 = peaks[i][0]
             f2 = peaks[j][0]
             t1 = peaks[i][1]
             t2 = peaks[j][1]
-            
+
             if t2-t1 <= MAX_TIME_DIFF:
                 res.append((md5.md5(str(f1)+str(f2)+str(t2-t1)).hexdigest(), t1))
-                
+
     return res
 
 def generateFingerprints(path, startTime=0, endTime=60000):
@@ -112,10 +114,10 @@ def generateFingerprints(path, startTime=0, endTime=60000):
             List of pairs (hash, time).
             Empty list if path does not contain a valid music file.
     """
-    
+
     filename, fileExtension = os.path.splitext(path)
     fileExtension = fileExtension[1:]
-    
+
     try:
         song = AudioSegment.from_file(path, fileExtension)
         song = song[startTime : endTime]
@@ -123,10 +125,10 @@ def generateFingerprints(path, startTime=0, endTime=60000):
         # Couldn't open song correctly
         return []
 
-    spectrum = generateSpectogram(song)        
+    spectrum = generateSpectogram(song)
     peaks = get2DPeaks(spectrum)
     fingerprints = getHashes(peaks)
-    
+
     # print("Number of fingerprints " + str(len(fingerprints)))
-    
+
     return fingerprints
