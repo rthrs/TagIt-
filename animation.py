@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
   Animation module providing wrappers for tasks that might be 
   time-consuming and thus should be run simultaneously with some
@@ -77,8 +76,8 @@ class HeavyWork:
     """
     if not self.aborted[0]:
       self.aborted[0] = True
-      self.t.join()
-      self.s.destroy()
+      self.task.join()
+      self.anim.destroy()
       self.parent.software_liststore.clear()
       self.parent.currentDir()
       self.callback(*((answer, ) + self.args))
@@ -92,14 +91,14 @@ class HeavyWork:
 
 class WorkSpinner(HeavyWork):
   """
-    Represents task for which sould be displayed spinner.
+    Represents task for which should be displayed spinner.
   """
   def run(self):
-    self.s = Spinner(self.parent)
-    self.s.show()
-    self.t = threading.Thread(target=self.__run__)
-    self.t.deamon = True
-    self.t.start()
+    self.anim = Spinner(self.parent)
+    self.anim.show()
+    self.task = threading.Thread(target=self.__run__)
+    self.task.deamon = True
+    self.task.start()
 
 class WorkProgress(HeavyWork):
   """
@@ -123,19 +122,19 @@ class WorkProgress(HeavyWork):
     if not self.aborted[0]:
       print "Stop"
       self.aborted[0] = True
-      self.t.join()
+      self.task.join()
       print "it now"
-      self.s.destroy()
+      self.anim.destroy()
 
   def update_bar(self, fraction):
     print str(fraction)
-    GObject.idle_add(self.s.builder.get_object("bar").set_fraction, fraction)
+    GObject.idle_add(self.anim.builder.get_object("bar").set_fraction, fraction)
 
   def run(self):
-    self.s = Progress(self.parent)
-    self.s.show()
-    self.s.builder.get_object("progress").connect("destroy", self.abort_cb)
-    self.s.builder.get_object("abort").connect("clicked", self.abort_cb)
-    self.t = threading.Thread(target=self.__run__)
-    self.t.deamon = True
-    self.t.start()
+    self.anim = Progress(self.parent)
+    self.anim.show()
+    self.anim.builder.get_object("progress").connect("destroy", self.abort_cb)
+    self.anim.builder.get_object("abort").connect("clicked", self.abort_cb)
+    self.task = threading.Thread(target=self.__run__)
+    self.task.deamon = True
+    self.task.start()

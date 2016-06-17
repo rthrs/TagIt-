@@ -346,7 +346,7 @@ class MyWindow(Gtk.ApplicationWindow):
             w = animation.WorkProgress(self, tag.tagFolder, (filename, ), self.dir_open_done)
             w.run()
             #tag.tagFolder(dir_open_dialog.get_filename())
-            print("opened: " + dir_open_dialog.get_filename())
+            print("opened: " + filename)
         else:
             h = animation.WorkSpinner(self, tag.tagFile, (filename,), self.open_response_cb_done)
             h.run()
