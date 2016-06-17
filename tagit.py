@@ -27,10 +27,18 @@ from gi.repository.GdkPixbuf import Pixbuf
 
 icons = ["go-previous","edit-cut", "edit-paste", "edit-copy"]
 
+
 class MyWindow(Gtk.ApplicationWindow):
+    """
+        Represents main window.
+    """
     path = "/home"
 
     def currentDir(self):
+        """
+            Creates a list of files in the current chosen directory [self.path]
+            to be displayed in main window.
+        """
         for x in sorted(os.listdir(self.path)):
             if x[0] != '.' and os.path.isdir(self.path + "/" + x):
                 self.software_liststore.append([x, "folder"])
@@ -39,6 +47,9 @@ class MyWindow(Gtk.ApplicationWindow):
                 self.software_liststore.append([x, "audio-x-generic"])
 
     def __init__(self, app):
+        """
+          Draws main window and sets all necessary callbacks.
+        """
         Gtk.Window.__init__(self, title="TagIt!", application=app)
         self.set_default_size(300, 300)
         self.set_border_width(15)
@@ -179,6 +190,7 @@ class MyWindow(Gtk.ApplicationWindow):
         self.show_all()
 
     def getFilePath(self):
+        """Returns path to currently selected file in main window"""
         model, it = self.treeview.get_selection().get_selected()
         #sprawdzic, czy przypadkiem nie   [1]  !!!
         return self.path + "/" + model[it][0]
@@ -201,6 +213,7 @@ class MyWindow(Gtk.ApplicationWindow):
         self.currentDir()
 
     def on_double_click(self, widget, c, d):
+        """Handles event of clicking position in mainwindow files list"""
         model, it = widget.get_selection().get_selected()
         print(model[it][0])
         if os.path.isdir(self.path + "/" + model[it][0]):
@@ -209,6 +222,7 @@ class MyWindow(Gtk.ApplicationWindow):
             self.currentDir()
 
     def on_click_change_button(self, widget):
+        """Adjusts available buttons to the type of currently selected file"""
         model, it = widget.get_selection().get_selected()
         print("w change")
         if it is not None and model[it][0]:
@@ -228,6 +242,7 @@ class MyWindow(Gtk.ApplicationWindow):
 
     # callback for creatinc collection
     def col_open_callback(self, action, parameter):
+        """Opens window that enables choosing a file."""
         # create a filechooserdialog to open:
         # the arguments are: title of the window, parent_window, action,
         # (buttons, response)
@@ -248,6 +263,7 @@ class MyWindow(Gtk.ApplicationWindow):
 
     #callback function for colection creating
     def col_open_done(self, answer, path):
+        """Callback for creationg collection"""
         succ, un, t = answer
         s = ""
         for file in un:
@@ -263,6 +279,7 @@ class MyWindow(Gtk.ApplicationWindow):
 
     # callback function for the dialog col_open_dialog
     def col_open_response_cb(self, dialog, response_id):
+        """Callback for user's choice of file to create collection from"""
         col_open_dialog = dialog
         # if response is "ACCEPT" (the button "Open" has been clicked)
         if response_id == Gtk.ResponseType.ACCEPT:
@@ -279,24 +296,29 @@ class MyWindow(Gtk.ApplicationWindow):
 
     # callback function for tagEditor
     def tagEdit_callback(self, action, parameter):
-      dialog = Gtk.FileChooserDialog(title="Wybierz plik",
-               action=Gtk.FileChooserAction.OPEN,
-               buttons=["Otwórz", Gtk.ResponseType.OK,
-              "Powrót", Gtk.ResponseType.CANCEL])
+        """Callback for manual tag editor chosen in menu"""
+        dialog = Gtk.FileChooserDialog(title="Wybierz plik",
+                 action=Gtk.FileChooserAction.OPEN,
+                 buttons=["Otwórz", Gtk.ResponseType.OK,
+                "Powrót", Gtk.ResponseType.CANCEL])
 
-      filter = Gtk.FileFilter()
-      filter.set_name("Pliki mp3")
-      filter.add_pattern("*.mp3")
-      dialog.add_filter(filter)
+        filter = Gtk.FileFilter()
+        filter.set_name("Pliki mp3")
+        filter.add_pattern("*.mp3")
+        dialog.add_filter(filter)
 
-      response = dialog.run()
-      filename = dialog.get_filename()
-      dialog.destroy()
-      if response == Gtk.ResponseType.OK:
-        edit.TagEditor(filename).tagEditor(self)
+        response = dialog.run()
+        filename = dialog.get_filename()
+        dialog.destroy()
+        if response == Gtk.ResponseType.OK:
+            edit.TagEditor(filename).tagEditor(self)
 
     # callback function for BUTTON ManualtagEditor or creating collection
     def ButtonTagEdit_callback(self, widget):
+        """
+          Callback function for BUTTON ManualtagEditor or creating collection,
+          depending on the type of file chosen in mainwindow's file list.
+        """
         label = self.buttons[2].get_label()
         print(label)
         filename = self.getFilePath()
@@ -312,6 +334,10 @@ class MyWindow(Gtk.ApplicationWindow):
 
     # callback function for BUTTON  AutoTag file or directory
     def ButtonAutoTag_callback(self, widget):
+        """
+            Callback function for BUTTON  AutoTag file or directory, depending
+            on the type of file chosen in mainwindow's file list.
+        """
         filename = self.getFilePath()
         print(filename)
         if os.path.isdir(filename):
@@ -320,13 +346,16 @@ class MyWindow(Gtk.ApplicationWindow):
             w = animation.WorkProgress(self, tag.tagFolder, (filename, ), self.dir_open_done)
             w.run()
             #tag.tagFolder(dir_open_dialog.get_filename())
-            print("opened: " + dir_open_dialog.get_filename())
+            print("opened: " + filename)
         else:
             h = animation.WorkSpinner(self, tag.tagFile, (filename,), self.open_response_cb_done)
             h.run()
 
     # callback function for about (see the AboutDialog example)
     def about_callback(self, action, parameter):
+        """
+          Callback function for menu entry displaying info abut TagIt.
+        """
         # a  Gtk.AboutDialog
         aboutdialog = Gtk.AboutDialog()
 
@@ -355,14 +384,17 @@ class MyWindow(Gtk.ApplicationWindow):
 
     # a callback function to destroy the aboutdialog
     def on_close(self, action, parameter):
+        """Destroys about window"""
         action.destroy()
 
     # callback for settings
     def settings_callback(self, action, parameter):
+        """Shows progam's main options"""
         print("Settings opened")
 
     # callback for open
     def open_callback(self, action, parameter):
+        """Shows 'open a file' window for tagging a single file."""
         # create a filechooserdialog to open:
         # the arguments are: title of the window, parent_window, action,
         # (buttons, response)
@@ -381,22 +413,24 @@ class MyWindow(Gtk.ApplicationWindow):
         open_dialog.show()
 
     def open_response_cb_done(self, answer, path):
+      """Message about the just finished process of tagging a single file."""
       if answer == 0:
-        me = edit.info("Udało się", "Plik został otagowany.")
-        me.run()
-        me.destroy()
+          me = edit.info("Udało się", "Plik został otagowany.")
+          me.run()
+          me.destroy()
       else:
-        me = edit.ups_quest("Coś poszło nie tak.", "Czy chcesz poprawić tagi ręcznie?")
-        response = me.run()
-        me.destroy()
-        if response == Gtk.ResponseType.OK:
-          edit.TagEditor(path).tagEditor(self)
+          me = edit.ups_quest("Coś poszło nie tak.", "Czy chcesz poprawić tagi ręcznie?")
+          response = me.run()
+          me.destroy()
+          if response == Gtk.ResponseType.OK:
+              edit.TagEditor(path).tagEditor(self)
 
 
     # callback function for the dialog open_dialog
     def open_response_cb(self, dialog, response_id):
         """
             Callback function for the dialog open_dialog.
+            Starts the process of tagging the just picked file.
         """
         open_dialog = dialog
         # if response is "ACCEPT" (the button "Open" has been clicked)
@@ -414,6 +448,9 @@ class MyWindow(Gtk.ApplicationWindow):
 
 
     def dir_open_done(self, answer, path):
+        """
+            Message about the just finished process of tagging a whole directory.
+        """
         s = ""
         for file in answer:
             s += "\n" + file
@@ -430,6 +467,7 @@ class MyWindow(Gtk.ApplicationWindow):
     def dir_open_response_cb(self, dialog, response_id):
         """
             Callback function for the dialog dir_open_dialog.
+            Starts the process of tagging the just picked direcotry.
         """
         dir_open_dialog = dialog
         # if response is "ACCEPT" (the button "Open" has been clicked)
@@ -448,6 +486,7 @@ class MyWindow(Gtk.ApplicationWindow):
 
     # callback for open a directory
     def dir_open_callback(self, action, parameter):
+        """Shows 'open a file' window for tagging a whole directory."""
         # create a filechooserdialog to open:
         # the arguments are: title of the window, parent_window, action,
         # (buttons, response)
@@ -474,7 +513,10 @@ Gtk.main()
 '''
 
 class MyApplication(Gtk.Application):
-
+    """
+        Represents gtk application object for TagIt;
+        evokes main window.
+    """
     def __init__(self):
         Gtk.Application.__init__(self)
 
