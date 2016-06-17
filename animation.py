@@ -61,7 +61,7 @@ class HeavyWork:
   def __init__(self, parent, todo, args, callback):
     """
       Takes parent window that displays list of files, particular task
-      to do in a new thread, its arguments and function that should
+      to do in a new thread, its arguments, and function that
       should be evoked after given task ends.
       [Callback] takes result of a task from thread 
       and arguments that task was given to thread-task.

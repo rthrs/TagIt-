@@ -394,7 +394,7 @@ class MyWindow(Gtk.ApplicationWindow):
 
     # callback for open
     def open_callback(self, action, parameter):
-        """Shows 'open a file' window for taggin a single file."""
+        """Shows 'open a file' window for tagging a single file."""
         # create a filechooserdialog to open:
         # the arguments are: title of the window, parent_window, action,
         # (buttons, response)
@@ -430,7 +430,7 @@ class MyWindow(Gtk.ApplicationWindow):
     def open_response_cb(self, dialog, response_id):
         """
             Callback function for the dialog open_dialog.
-            Starts the process of taggin the just picked file.
+            Starts the process of tagging the just picked file.
         """
         open_dialog = dialog
         # if response is "ACCEPT" (the button "Open" has been clicked)
@@ -467,7 +467,7 @@ class MyWindow(Gtk.ApplicationWindow):
     def dir_open_response_cb(self, dialog, response_id):
         """
             Callback function for the dialog dir_open_dialog.
-            Starts the process of taggin the just picked direcotry.
+            Starts the process of tagging the just picked direcotry.
         """
         dir_open_dialog = dialog
         # if response is "ACCEPT" (the button "Open" has been clicked)
@@ -486,7 +486,7 @@ class MyWindow(Gtk.ApplicationWindow):
 
     # callback for open a directory
     def dir_open_callback(self, action, parameter):
-        """Shows 'open a file' window for taggin a whole directory."""
+        """Shows 'open a file' window for tagging a whole directory."""
         # create a filechooserdialog to open:
         # the arguments are: title of the window, parent_window, action,
         # (buttons, response)
