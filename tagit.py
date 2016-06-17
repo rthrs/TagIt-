@@ -27,10 +27,18 @@ from gi.repository.GdkPixbuf import Pixbuf
 
 icons = ["go-previous","edit-cut", "edit-paste", "edit-copy"]
 
+
 class MyWindow(Gtk.ApplicationWindow):
+    """
+        Represents main window.
+    """
     path = "/home"
 
     def currentDir(self):
+        """
+            Creates a list of files in the current chosen directory [self.path]
+            to be displayed in main window.
+        """
         for x in sorted(os.listdir(self.path)):
             if x[0] != '.' and os.path.isdir(self.path + "/" + x):
                 self.software_liststore.append([x, "folder"])
@@ -39,6 +47,9 @@ class MyWindow(Gtk.ApplicationWindow):
                 self.software_liststore.append([x, "audio-x-generic"])
 
     def __init__(self, app):
+        """
+          Draws main window and sets all necessary callbacks.
+        """
         Gtk.Window.__init__(self, title="TagIt!", application=app)
         self.set_default_size(300, 300)
         self.set_border_width(15)
@@ -179,6 +190,7 @@ class MyWindow(Gtk.ApplicationWindow):
         self.show_all()
 
     def getFilePath(self):
+        """Returns path o currently selected file in main window"""
         model, it = self.treeview.get_selection().get_selected()
         #sprawdzic, czy przypadkiem nie   [1]  !!!
         return self.path + "/" + model[it][0]
@@ -201,6 +213,7 @@ class MyWindow(Gtk.ApplicationWindow):
         self.currentDir()
 
     def on_double_click(self, widget, c, d):
+        """Handles event of clicking position in mainwindow files list"""
         model, it = widget.get_selection().get_selected()
         print(model[it][0])
         if os.path.isdir(self.path + "/" + model[it][0]):
@@ -209,6 +222,7 @@ class MyWindow(Gtk.ApplicationWindow):
             self.currentDir()
 
     def on_click_change_button(self, widget):
+        """Adjusts available buttons to the type of currently selected file"""
         model, it = widget.get_selection().get_selected()
         print("w change")
         if it is not None and model[it][0]:
@@ -279,21 +293,21 @@ class MyWindow(Gtk.ApplicationWindow):
 
     # callback function for tagEditor
     def tagEdit_callback(self, action, parameter):
-      dialog = Gtk.FileChooserDialog(title="Wybierz plik",
-               action=Gtk.FileChooserAction.OPEN,
-               buttons=["Otwórz", Gtk.ResponseType.OK,
-              "Powrót", Gtk.ResponseType.CANCEL])
+        dialog = Gtk.FileChooserDialog(title="Wybierz plik",
+                 action=Gtk.FileChooserAction.OPEN,
+                 buttons=["Otwórz", Gtk.ResponseType.OK,
+                "Powrót", Gtk.ResponseType.CANCEL])
 
-      filter = Gtk.FileFilter()
-      filter.set_name("Pliki mp3")
-      filter.add_pattern("*.mp3")
-      dialog.add_filter(filter)
+        filter = Gtk.FileFilter()
+        filter.set_name("Pliki mp3")
+        filter.add_pattern("*.mp3")
+        dialog.add_filter(filter)
 
-      response = dialog.run()
-      filename = dialog.get_filename()
-      dialog.destroy()
-      if response == Gtk.ResponseType.OK:
-        edit.TagEditor(filename).tagEditor(self)
+        response = dialog.run()
+        filename = dialog.get_filename()
+        dialog.destroy()
+        if response == Gtk.ResponseType.OK:
+            edit.TagEditor(filename).tagEditor(self)
 
     # callback function for BUTTON ManualtagEditor or creating collection
     def ButtonTagEdit_callback(self, widget):
@@ -382,15 +396,15 @@ class MyWindow(Gtk.ApplicationWindow):
 
     def open_response_cb_done(self, answer, path):
       if answer == 0:
-        me = edit.info("Udało się", "Plik został otagowany.")
-        me.run()
-        me.destroy()
+          me = edit.info("Udało się", "Plik został otagowany.")
+          me.run()
+          me.destroy()
       else:
-        me = edit.ups_quest("Coś poszło nie tak.", "Czy chcesz poprawić tagi ręcznie?")
-        response = me.run()
-        me.destroy()
-        if response == Gtk.ResponseType.OK:
-          edit.TagEditor(path).tagEditor(self)
+          me = edit.ups_quest("Coś poszło nie tak.", "Czy chcesz poprawić tagi ręcznie?")
+          response = me.run()
+          me.destroy()
+          if response == Gtk.ResponseType.OK:
+              edit.TagEditor(path).tagEditor(self)
 
 
     # callback function for the dialog open_dialog
@@ -474,7 +488,10 @@ Gtk.main()
 '''
 
 class MyApplication(Gtk.Application):
-
+    """
+        Represents gtk application object for TagIt;
+        evokes main window.
+    """
     def __init__(self):
         Gtk.Application.__init__(self)
 

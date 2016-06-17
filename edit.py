@@ -55,6 +55,9 @@ class TagEditor:
         self.builder.get_object('tagEditor').destroy()
 
     def save_callback(self, action, fileh):
+        """
+            Saves changes made in editor window.
+        """
         title = unicode(self.builder.get_object('title').get_text(), "UTF-8")
         album = unicode(self.builder.get_object('album').get_text(), "UTF-8")
         artist = unicode(self.builder.get_object('artist').get_text(), "UTF-8")
@@ -122,6 +125,9 @@ class TagEditor:
 
 
 def show_info(builder, filepath):
+    """
+      Tries its best to pass to builder window some tags found in filepath.
+    """
     try:
         fileh = eyed3.load(filepath)
         title = sNone(fileh.tag.title)
@@ -145,6 +151,9 @@ def show_info(builder, filepath):
 # Messages
 
 def info(title, message):
+    """
+        Displays standard meesage info with ok button.
+    """
     me = Gtk.MessageDialog(title=title,
                            message_type=Gtk.MessageType.INFO, buttons=Gtk.ButtonsType.OK)
     me.format_secondary_text(message)
@@ -152,6 +161,9 @@ def info(title, message):
 
 
 def ups_quest(title, message):
+    """
+        Displays dialog with question that can be accepted or ignored.
+    """
     me = Gtk.MessageDialog(title=title,
                            message_type=Gtk.MessageType.QUESTION, buttons=
                            ["Tak", Gtk.ResponseType.OK,
